@@ -87,3 +87,10 @@ Derived/
 
 ### Tuist managed dependencies ###
 Tuist/.build
+
+### Config
+Config/
+**.xcconfig
+
+Config/Debug.xcconfig
+Config/Release.xcconfig
