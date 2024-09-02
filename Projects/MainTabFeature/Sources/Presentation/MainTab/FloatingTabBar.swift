@@ -13,8 +13,8 @@ public struct FloatingTabBar: View {
     @Namespace private var animation
     @Binding var tabSelection: Tab
     
-    private var activeForegroundColor: Color = .white
-    private var activeBackgroundColor: Color = DesignSystemAsset.customBlack.swiftUIColor.opacity(0.3)
+    private var activeForegroundColor: Color = DesignSystemAsset.white
+    private var activeBackgroundColor: Color = DesignSystemAsset.lightGray
     
     public init(tabSelection: Binding<Tab>) {
         self._tabSelection = tabSelection
@@ -32,7 +32,7 @@ public struct FloatingTabBar: View {
                             .fontWeight(.medium)
                             .frame(width: 60, height: 40)
                     }
-                    .foregroundStyle(tabSelection == tab ? activeForegroundColor : .gray)
+                    .foregroundStyle(tabSelection == tab ? activeForegroundColor : DesignSystemAsset.darkGray)
                     .padding(.vertical, 2)
                     .padding(.horizontal, 15)
                     .contentShape(.rect)
@@ -55,8 +55,8 @@ public struct FloatingTabBar: View {
         .frame(height: 55)
         .background(
             .background
-                .shadow(.drop(color: DesignSystemAsset.customBlack.swiftUIColor.opacity(0.08), radius: 5, x: 5, y: 5))
-                .shadow(.drop(color: DesignSystemAsset.customBlack.swiftUIColor.opacity(0.06), radius: 5, x: -5, y: -5)),
+                .shadow(.drop(color: DesignSystemAsset.gray008, radius: 5, x: 5, y: 5))
+                .shadow(.drop(color: DesignSystemAsset.gray006, radius: 5, x: -5, y: -5)),
             in: .capsule
         )
         .animation(.smooth(duration: 0.3, extraBounce: 0), value: tabSelection)

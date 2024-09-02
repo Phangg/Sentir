@@ -19,7 +19,7 @@ public struct SentirMainView: View {
                 LazyVStack(spacing: 10) {
                     ForEach(1...30, id: \.self) { _ in
                         RoundedRectangle(cornerRadius: 10)
-                            .fill(.orange.opacity(0.2))
+                            .fill(DesignSystemAsset.lightGray)
                             .frame(height: 40)
                     }
                 }
@@ -49,7 +49,7 @@ public struct SentirMainView: View {
                 print("설명 보기")
             } label: {
                 Image(systemName: "questionmark.circle")
-                    .tint(DesignSystemAsset.customBlack.swiftUIColor)
+                    .tint(DesignSystemAsset.black)
             }
         }
     }

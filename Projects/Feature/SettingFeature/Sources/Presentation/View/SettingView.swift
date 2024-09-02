@@ -49,7 +49,7 @@ public struct SettingView: View {
             .navigationBarBackButtonHidden()
             .toolbar { settingViewToolbarContent() }
         }
-        .tint(DesignSystemAsset.customBlack.swiftUIColor)
+        .tint(DesignSystemAsset.black)
     }
     
     @ViewBuilder
