@@ -53,7 +53,7 @@ public struct MainTabView: View {
             }
             // 실제로 사용되는 TabBar
             FloatingTabBar(tabSelection: $tabSelection)
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 30)
         }
     }
 }
