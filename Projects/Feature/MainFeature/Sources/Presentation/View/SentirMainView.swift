@@ -7,9 +7,13 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 public struct SentirMainView: View {
+    @AppStorage("AppScheme") private var appScheme: AppScheme = .device
+    @Environment(\.colorScheme) private var colorScheme
+
     public init() { }
 
     public var body: some View {
@@ -31,15 +35,23 @@ public struct SentirMainView: View {
             .navigationBarBackButtonHidden()
             .toolbar { mainViewToolbarContent() }
         }
+        .onChange(of: appScheme) { _, _ in
+            updateScheme()
+        }
+        .onAppear {
+            updateScheme()
+        }
     }
     
     @ToolbarContentBuilder
     private func mainViewToolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
             HStack {
-                Image(uiImage: DesignSystemAsset.sentirImage.image)
+                //
+                Image(uiImage: colorScheme == .dark ? DesignSystemAsset.darkSentir.image : DesignSystemAsset.lightSentir.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                //
                 Spacer()
             }
         }
@@ -51,6 +63,12 @@ public struct SentirMainView: View {
                 Image(systemName: "questionmark.circle")
                     .tint(DesignSystemAsset.black)
             }
+        }
+    }
+    
+    private func updateScheme() {
+        if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow {
+            window.overrideUserInterfaceStyle = appScheme == .dark ? .dark : appScheme == .light ? .light : .unspecified
         }
     }
 }

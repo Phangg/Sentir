@@ -18,7 +18,7 @@ public enum SettingModel: String, CaseIterable {
     //
     case lock = "잠금 설정"
     case notice = "알림 설정"
-    case displayMode = "다크모드 / 라이트 모드"
+    case displayMode = "다크 모드 / 라이트 모드"
     case font = "폰트 설정"
     //
     case deleteData = "데이터 삭제"
@@ -36,7 +36,8 @@ public enum SettingModel: String, CaseIterable {
         switch self {
         case .lock, .notice:
             return .toggle
-        case .deleteData, .backUpData, .restoreData, .donation, .feedback, .displayMode, .font, .openSource:
+        case .deleteData, .backUpData, .restoreData, .donation,
+                .feedback, .displayMode, .font, .openSource:
             return .navigate
         case .appVersion:
             return .text

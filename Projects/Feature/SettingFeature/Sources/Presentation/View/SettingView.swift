@@ -7,20 +7,33 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 public struct SettingView: View {
+    // 다크 모드 / 라이트 모드 설정
+    @AppStorage("AppScheme") private var appScheme: AppScheme = .device
+    @SceneStorage("ShowScenePickerView") private var showPickerView: Bool = false
+    @Environment(\.colorScheme) private var scheme
+    // 다크 모드 / 라이트 모드 설정
+    @State private var schemePreviews: [SchemePreview] = []
+    @State private var showSheet: Bool = false
+    @State private var overlayWindow: UIWindow?
+    // 토글 설정
     @State private var toggleStates: [SettingModel: Bool] = [:]
-
-    public init() { }
+    
+    public init() {
+        // scheme 확인
+        setWindowScheme()
+    }
 
     public var body: some View {
         NavigationStack {
-            //
+            // 스크롤 뷰
             ScrollView {
                 LazyVStack(spacing: 10) {
                     ForEach(SettingModel.allCases, id: \.self) { item in
-                        //
+                        // 각 세팅 아이템
                         HStack(alignment: .center) {
                             //
                             Text(item.rawValue)
@@ -49,6 +62,39 @@ public struct SettingView: View {
             .navigationBarBackButtonHidden()
             .toolbar { settingViewToolbarContent() }
         }
+        // 다크 모드 / 라이트 모드
+        .sheet(isPresented: $showPickerView, onDismiss: {
+            schemePreviews = []
+            showPickerView = false
+        }, content: {
+            SchemePickerView(previews: $schemePreviews)
+        })
+        .onChange(of: showPickerView) { oldValue, newValue in
+            if newValue {
+                generateSchemwPreviews()
+            } else {
+                showSheet = false
+            }
+        }
+        .onAppear {
+            if let scene = (UIApplication.shared.connectedScenes.first as? UIWindowScene),
+               overlayWindow == nil {
+                
+                let window = UIWindow(windowScene: scene)
+                window.backgroundColor = .clear
+                window.isHidden = false
+                window.isUserInteractionEnabled = false
+                
+                let emptyController = UIViewController()
+                emptyController.view.backgroundColor = .clear
+                
+                window.rootViewController = emptyController
+                
+                overlayWindow = window
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: appScheme)
+        //
         .tint(DesignSystemAsset.black)
     }
     
@@ -57,10 +103,31 @@ public struct SettingView: View {
         switch item.type {
         case .navigate:
             Button {
-                //
+                // TODO: -
+                switch item {
+                case .displayMode:
+                    showPickerView.toggle()
+                case .font:
+                    break
+                case .deleteData:
+                    break
+                case .backUpData:
+                    break
+                case .restoreData:
+                    break
+                case .donation:
+                    break
+                case .feedback:
+                    break
+                case .openSource:
+                    break
+                default:
+                    break
+                }
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.callout)
+                    .padding()
             }
         case .toggle:
             Toggle("", isOn: Binding(
@@ -80,8 +147,76 @@ public struct SettingView: View {
         ToolbarItem(placement: .topBarLeading) {
             Text("설정")
                 .font(.title2)
-                .padding(20)
+                .padding(10)
         }
+    }
+    
+    private func setWindowScheme() {
+        if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow {
+            window.overrideUserInterfaceStyle = appScheme == .dark ? .dark : appScheme == .light ? .light : .unspecified
+        }
+    }
+    
+    @MainActor
+    private func generateSchemwPreviews() {
+        Task {
+            if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow,
+               schemePreviews.isEmpty {
+                let size = window.screen.bounds.size
+                let defaultStyle = window.overrideUserInterfaceStyle
+                
+                let defautSchemePreview = window.image(size)
+                
+                schemePreviews.append(
+                    .init(
+                        image: defautSchemePreview,
+                        text: scheme == .dark ? AppScheme.dark.rawValue : AppScheme.light.rawValue
+                    )
+                )
+                
+                showOverlayImageView(defautSchemePreview)
+                
+                window.overrideUserInterfaceStyle = scheme.oppsiteInterfaceStyle
+                let otherSchemePreviewImage = window.image(size)
+                
+                schemePreviews.append(
+                    .init(
+                        image: otherSchemePreviewImage,
+                        text: scheme == .dark ? AppScheme.light.rawValue : AppScheme.dark.rawValue
+                    )
+                )
+                
+                if scheme == .dark { schemePreviews = schemePreviews.reversed() }
+                
+                window.overrideUserInterfaceStyle = defaultStyle
+                try? await Task.sleep(for: .seconds(0))
+                
+                removeOverlayImageView()
+                
+                showSheet = true
+            }
+        }
+    }
+    
+    private func showOverlayImageView(_ image: UIImage?) {
+        if overlayWindow?.rootViewController?.view.subviews.isEmpty ?? false {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFit
+            
+            overlayWindow?.rootViewController?.view.addSubview(imageView)
+        }
+    }
+    
+    private func removeOverlayImageView() {
+        overlayWindow?.rootViewController?.view.subviews.forEach {
+            $0.removeFromSuperview()
+        }
+    }
+}
+
+extension ColorScheme {
+    var oppsiteInterfaceStyle: UIUserInterfaceStyle {
+        return self == .dark ? .light : .dark
     }
 }
 
