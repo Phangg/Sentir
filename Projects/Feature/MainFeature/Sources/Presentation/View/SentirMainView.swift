@@ -48,9 +48,10 @@ public struct SentirMainView: View {
         ToolbarItem(placement: .topBarLeading) {
             HStack {
                 //
-                Image(uiImage: colorScheme == .dark ? DesignSystemAsset.darkSentir.image : DesignSystemAsset.lightSentir.image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                Text("Sentir")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding(.horizontal, 10)
                 //
                 Spacer()
             }
