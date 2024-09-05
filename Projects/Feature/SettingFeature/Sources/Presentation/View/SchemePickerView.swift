@@ -28,8 +28,7 @@ public struct SchemePickerView: View {
         VStack(alignment: .leading, spacing: 10) {
             //
             Text("다크 모드 / 라이트 모드")
-                .font(.headline)
-                .fontWeight(.medium)
+                .textStyle(SmallTitle(weight: .medium))
             //
             Spacer(minLength: 0)
             //

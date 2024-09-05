@@ -49,8 +49,7 @@ public struct SentirMainView: View {
             HStack {
                 //
                 Text("Sentir")
-                    .font(.title)
-                    .fontWeight(.bold)
+                    .textStyle(Header(weight: .bold))
                     .padding(.horizontal, 10)
                 //
                 Spacer()
@@ -63,6 +62,7 @@ public struct SentirMainView: View {
             } label: {
                 Image(systemName: "questionmark.circle")
                     .tint(DesignSystemAsset.black)
+                    .padding(.horizontal, 10)
             }
         }
     }

@@ -37,8 +37,7 @@ public struct SettingView: View {
                         HStack(alignment: .center) {
                             //
                             Text(item.rawValue)
-                                .font(.callout)
-                                .fontWeight(.regular)
+                                .textStyle(Paragraph())
                                 .padding(.vertical, 10)
                             //
                             Spacer()
@@ -138,7 +137,7 @@ public struct SettingView: View {
         case .text:
             // TODO: -
             Text("1.0.0")
-                .font(.callout)
+                .textStyle(Paragraph())
         }
     }
     
@@ -146,8 +145,8 @@ public struct SettingView: View {
     private func settingViewToolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
             Text("설정")
-                .font(.title2)
-                .padding(10)
+                .textStyle(Title())
+                .padding(.horizontal, 10)
         }
     }
     
