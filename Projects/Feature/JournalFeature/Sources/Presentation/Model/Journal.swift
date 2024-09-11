@@ -16,7 +16,7 @@ public struct JournalData {
     public init() { }
     
     // MARK: - 임시 테스트 데이터
-    public static let temporaryJournalData: [String: [Journal]] = [
+    public static let sample: [String: [Journal]] = [
         DateFormat.dateToDateInfoString(Date(timeIntervalSinceNow: -864000)): [
             .init(content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."),
             .init(content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."),

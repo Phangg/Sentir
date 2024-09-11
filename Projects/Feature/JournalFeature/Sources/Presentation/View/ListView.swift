@@ -11,7 +11,7 @@ import Common
 import DesignSystem
 
 public struct ListView: View {
-    private var temporaryJournalData = JournalData.temporaryJournalData
+    @State private var journalData = JournalData.sample
     
     public init() { }
         
@@ -22,10 +22,10 @@ public struct ListView: View {
             
             //
             List {
-                ForEach(temporaryJournalData.keys.sorted(by: >), id: \.self) { dateInfo in
+                ForEach(journalData.keys.sorted(by: >), id: \.self) { dateInfo in
                     //
                     Section {
-                        ForEach(temporaryJournalData[dateInfo] ?? [], id: \.id) { journal in
+                        ForEach(journalData[dateInfo] ?? [], id: \.id) { journal in
                             // TODO: -
                             VStack(alignment: .leading, spacing: 4) {
                                 //
@@ -38,7 +38,10 @@ public struct ListView: View {
                                     .textStyle(Paragraph())
                                     .lineLimit(2)
                             }
-                            .padding(.vertical, 4)
+                            .padding(.vertical, 2)
+                        }
+                        .onDelete { indexSet in
+                            deleteItem(at: indexSet, for: dateInfo)
                         }
                     } header: {
                         Text(dateInfo)
@@ -51,5 +54,20 @@ public struct ListView: View {
             .listStyle(.plain)
         }
         .safeAreaPadding(.bottom, 70)
+    }
+    
+    private func deleteItem(
+        at indexSet: IndexSet,
+        for dateInfo: String
+    ) {
+        if var journals = journalData[dateInfo] {
+            journals.remove(atOffsets: indexSet)
+            //
+            if journals.isEmpty {
+                journalData.removeValue(forKey: dateInfo)
+            } else {
+                journalData[dateInfo] = journals
+            }
+        }
     }
 }
