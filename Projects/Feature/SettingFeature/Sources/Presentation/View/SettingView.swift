@@ -135,8 +135,7 @@ public struct SettingView: View {
             ))
             .labelsHidden()
         case .text:
-            // TODO: -
-            Text("1.0.0")
+            Text("\(Version.getAppVersion()) (\(Version.getBuildVersion()))")
                 .textStyle(Paragraph())
         }
     }
