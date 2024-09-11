@@ -18,6 +18,8 @@ extension Project {
         hasResource: Bool = false,
         appExtensionTarget: [Target] = [],
         packages: [Package] = [],
+        options: Options = .options(defaultKnownRegions: ["en", "ko"],
+                                    developmentRegion: "ko"),
         dependencies: [TargetDependency]
     ) -> Self {
         
@@ -51,6 +53,7 @@ extension Project {
         return Project(
             name: name,
             organizationName: .organizationName,
+            options: options,
             packages: packages,
             targets: targets,
             schemes: schemes
