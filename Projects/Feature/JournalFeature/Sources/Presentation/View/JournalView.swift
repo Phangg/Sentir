@@ -11,19 +11,29 @@ import DesignSystem
 
 public struct JournalView: View {
     @State private var viewState: JournalViewState = .list
+    @State private var filterState: JournalFilterState = .newest
+    @State private var showFilterSheet: Bool = false
     
     public init() { }
 
     public var body: some View {
         NavigationStack {
             //
-            VStack {
+            VStack(alignment: .trailing, spacing: 0) {
                 //
                 switch viewState {
                 case .list:
-                    //
-                    ListView()
-                        .transition(.opacity)
+                    ZStack(alignment: .topTrailing) {
+                        //
+                        ListView()
+                            .transition(.opacity)
+                        //
+                        VStack {
+                            JournalListFilterButton()
+                                .zIndex(1)
+                            Spacer()
+                        }
+                    }
                 case .calendar:
                     //
                     CalendarView()
@@ -34,13 +44,47 @@ public struct JournalView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden()
             .toolbar { journalViewToolbarContent() }
+            //
+            .navigationDestination(for: String.self) { value in
+                switch value {
+                case "SearchView":
+                    SearchView()
+                default:
+                    fatalError()
+                }
+            }
         }
+        // 최신순 / 과거순
+        .sheet(isPresented: $showFilterSheet, onDismiss: {
+            showFilterSheet = false
+        }, content: {
+            JournalFilterView(filterState: $filterState,
+                              showFilterSheet: $showFilterSheet)
+        })
         //
         .tint(DesignSystemAsset.black)
     }
     
+    @ViewBuilder
+    fileprivate func JournalListFilterButton() -> some View {
+        //
+        Button {
+            showFilterSheet = true
+        } label: {
+            HStack(spacing: 6) {
+                Text(filterState.rawValue)
+                    .textStyle(Paragraph(weight: .medium))
+                Image(systemName: "chevron.down")
+                    .font(.callout)
+                    .fontWeight(.medium)
+            }
+        }
+        .padding(.top, 10)
+        .padding(.horizontal, 20)
+    }
+    
     @ToolbarContentBuilder
-    private func journalViewToolbarContent() -> some ToolbarContent{
+    fileprivate func journalViewToolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
             //
             Text("기록")
@@ -51,13 +95,9 @@ public struct JournalView: View {
         if viewState == .list {
             ToolbarItem(placement: .topBarTrailing) {
                 //
-                Button {
-                    // TODO: -
-                    print("검색")
-                } label: {
+                NavigationLink(value: "SearchView") {
                     Image(systemName: "magnifyingglass")
                         .tint(DesignSystemAsset.black)
-                        .padding(.leading, 10)
                 }
             }
         }
