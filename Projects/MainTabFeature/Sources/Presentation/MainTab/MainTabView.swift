@@ -55,13 +55,14 @@ public struct MainTabView: View {
             FloatingTabBar(tabSelection: $tabSelection)
                 .padding(.horizontal, 30)
         }
+        .ignoresSafeArea(.keyboard)
     }
 }
 
-public struct HideTabBar: UIViewRepresentable {
-    public var result: () -> ()
+fileprivate struct HideTabBar: UIViewRepresentable {
+    var result: () -> ()
     
-    public func makeUIView(
+    func makeUIView(
         context: Context
     ) -> some UIView {
         let view = UIView(frame: .zero)
@@ -77,7 +78,7 @@ public struct HideTabBar: UIViewRepresentable {
         return view
     }
     
-    public func updateUIView(
+    func updateUIView(
         _ uiView: UIViewType,
         context: Context
     ) {

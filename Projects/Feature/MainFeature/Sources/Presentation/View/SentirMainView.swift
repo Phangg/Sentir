@@ -44,7 +44,7 @@ public struct SentirMainView: View {
     }
     
     @ToolbarContentBuilder
-    private func mainViewToolbarContent() -> some ToolbarContent {
+    fileprivate func mainViewToolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
             HStack {
                 //

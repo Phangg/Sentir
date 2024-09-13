@@ -17,11 +17,9 @@ public struct ListView: View {
         
     public var body: some View {
         VStack {
-            // TODO: - 필터링
-            Text("ListView")
-            
             //
             List {
+                //
                 ForEach(journalData.keys.sorted(by: >), id: \.self) { dateInfo in
                     //
                     Section {
@@ -52,6 +50,7 @@ public struct ListView: View {
                 }
             }
             .listStyle(.plain)
+            .padding(.top, 5)
         }
         .safeAreaPadding(.bottom, 70)
     }

@@ -141,7 +141,7 @@ public struct SettingView: View {
     }
     
     @ToolbarContentBuilder
-    private func settingViewToolbarContent() -> some ToolbarContent {
+    fileprivate func settingViewToolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
             Text("설정")
                 .textStyle(Title())
