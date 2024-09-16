@@ -53,6 +53,27 @@ public struct Title: ViewModifier {
 }
 
 //
+public struct MediumTitle: ViewModifier {
+    private var weight: Font.Weight
+    private var color: Color
+    
+    public init(
+        weight: Font.Weight = .regular,
+        color: Color = DesignSystemAsset.black
+    ) {
+        self.weight = weight
+        self.color = color
+    }
+    
+    public func body(content: Content) -> some View {
+        content
+            .font(.title3)
+            .fontWeight(weight)
+            .foregroundStyle(color)
+    }
+}
+
+//
 public struct SmallTitle: ViewModifier {
     private var weight: Font.Weight
     private var color: Color
