@@ -38,6 +38,9 @@ public struct JournalView: View {
                     //
                     CalendarView()
                         .transition(.opacity)
+
+                    //
+                    ListView()
                 }
             }
             .animation(.easeInOut, value: viewState)
