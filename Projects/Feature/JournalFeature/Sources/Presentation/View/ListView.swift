@@ -24,12 +24,10 @@ public struct ListView: View {
                     //
                     Section {
                         ForEach(journalData[dateInfo] ?? [], id: \.id) { journal in
-                            // TODO: -
                             VStack(alignment: .leading, spacing: 4) {
                                 //
                                 Text(journal.timeInfo)
-                                    .textStyle(SmallParagraph(
-                                        color: DesignSystemAsset.darkGray))
+                                    .textStyle(SmallParagraph(color: DesignSystemAsset.darkGray))
                                     .lineLimit(1)
                                 //
                                 Text(journal.content)

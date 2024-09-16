@@ -144,7 +144,7 @@ public struct SettingView: View {
     fileprivate func settingViewToolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
             Text("설정")
-                .textStyle(Title())
+                .textStyle(Title(weight: .bold))
                 .padding(.horizontal, 10)
         }
     }

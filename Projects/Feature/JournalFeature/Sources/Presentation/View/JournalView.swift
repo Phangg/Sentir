@@ -73,7 +73,7 @@ public struct JournalView: View {
         } label: {
             HStack(spacing: 6) {
                 Text(filterState.rawValue)
-                    .textStyle(Paragraph(weight: .medium))
+                    .textStyle(Paragraph())
                 Image(systemName: "chevron.down")
                     .font(.callout)
                     .fontWeight(.medium)
@@ -88,7 +88,7 @@ public struct JournalView: View {
         ToolbarItem(placement: .topBarLeading) {
             //
             Text("기록")
-                .textStyle(Title())
+                .textStyle(Title(weight: .bold))
                 .padding(.horizontal, 10)
         }
         //
