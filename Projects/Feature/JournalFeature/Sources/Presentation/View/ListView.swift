@@ -12,38 +12,66 @@ import DesignSystem
 
 public struct ListView: View {
     @State private var journalData = JournalData.sample
+    private let listType: ListViewType
     
-    public init() { }
+    public init(
+        listType: ListViewType
+    ) {
+        self.listType = listType
+    }
         
     public var body: some View {
         VStack {
             //
             List {
                 //
-                ForEach(journalData.keys.sorted(by: >), id: \.self) { dateInfo in
+                if listType == .all {
                     //
-                    Section {
-                        ForEach(journalData[dateInfo] ?? [], id: \.id) { journal in
-                            VStack(alignment: .leading, spacing: 4) {
-                                //
-                                Text(journal.timeInfo)
-                                    .textStyle(SmallParagraph(color: DesignSystemAsset.darkGray))
-                                    .lineLimit(1)
-                                //
-                                Text(journal.content)
-                                    .textStyle(Paragraph())
-                                    .lineLimit(2)
+                    ForEach(journalData.keys.sorted(by: >), id: \.self) { dateInfo in
+                        //
+                        Section {
+                            ForEach(journalData[dateInfo] ?? [], id: \.id) { journal in
+                                VStack(alignment: .leading, spacing: 4) {
+                                    //
+                                    Text(journal.timeInfo)
+                                        .textStyle(SmallParagraph(color: DesignSystemAsset.darkGray))
+                                        .lineLimit(1)
+                                    //
+                                    Text(journal.content)
+                                        .textStyle(Paragraph())
+                                        .lineLimit(2)
+                                }
+                                .padding(.vertical, 2)
                             }
-                            .padding(.vertical, 2)
+                            .onDelete { indexSet in
+                                deleteItem(at: indexSet, for: dateInfo)
+                            }
+                        } header: {
+                            Text(dateInfo)
+                                .textStyle(SmallTitle(
+                                    weight: .medium,
+                                    color: DesignSystemAsset.darkGray))
                         }
-                        .onDelete { indexSet in
-                            deleteItem(at: indexSet, for: dateInfo)
+                    }
+                }
+                
+                //
+                else {
+                    ForEach(journalData[DateFormat.dateToDateInfoString(Date())] ?? [], id: \.id) { journal in
+                        VStack(alignment: .leading, spacing: 4) {
+                            //
+                            Text(journal.timeInfo)
+                                .textStyle(SmallParagraph(color: DesignSystemAsset.darkGray))
+                                .lineLimit(1)
+                            //
+                            Text(journal.content)
+                                .textStyle(Paragraph())
+                                .lineLimit(2)
                         }
-                    } header: {
-                        Text(dateInfo)
-                            .textStyle(SmallTitle(
-                                weight: .medium,
-                                color: DesignSystemAsset.darkGray))
+                        .padding(.vertical, 2)
+                    }
+                    .onDelete { indexSet in
+                        deleteItem(at: indexSet, for: DateFormat.dateToDateInfoString(Date()))
                     }
                 }
             }

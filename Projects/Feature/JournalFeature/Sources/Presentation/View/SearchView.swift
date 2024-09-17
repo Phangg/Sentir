@@ -34,7 +34,7 @@ public struct SearchView: View {
                     ProgressView()
                 case .finish:
                     // TODO: - 검색 결과 전달
-                    ListView()
+                    ListView(listType: .all)
                         .padding(.horizontal, -20)
                 }
                 //

@@ -25,7 +25,7 @@ public struct JournalView: View {
                 case .list:
                     ZStack(alignment: .topTrailing) {
                         //
-                        ListView()
+                        ListView(listType: .all)
                             .transition(.opacity)
                         //
                         VStack {
@@ -40,7 +40,7 @@ public struct JournalView: View {
                         .transition(.opacity)
 
                     //
-                    ListView()
+                    ListView(listType: .day)
                 }
             }
             .animation(.easeInOut, value: viewState)
