@@ -7,9 +7,12 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 struct CalendarCellView: View {
+    // 다크 모드 / 라이트 모드 설정
+    @Environment(\.colorScheme) private var scheme
     var day: Int
     var isSelected: Bool = false
     var isToday: Bool = false
@@ -32,7 +35,7 @@ struct CalendarCellView: View {
         } else if isToday {
             return DesignSystemAsset.gray008
         } else {
-            return DesignSystemAsset.white
+            return scheme == .dark ? Color.black : DesignSystemAsset.white
         }
     }
     
