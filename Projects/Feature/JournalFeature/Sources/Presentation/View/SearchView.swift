@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 public struct SearchView: View {
@@ -34,7 +35,7 @@ public struct SearchView: View {
                     ProgressView()
                 case .finish:
                     // TODO: - 검색 결과 전달
-                    ListView(listType: .all)
+                    ListView(listType: .search(searchText: searchText))
                         .padding(.horizontal, -20)
                 }
                 //

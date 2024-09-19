@@ -8,5 +8,6 @@
 
 public enum ListViewType {
     case all
-    case day
+    case day(dateInfo: String)
+    case search(searchText: String)
 }

@@ -25,54 +25,16 @@ public struct ListView: View {
             //
             List {
                 //
-                if listType == .all {
-                    //
-                    ForEach(journalData.keys.sorted(by: >), id: \.self) { dateInfo in
-                        //
-                        Section {
-                            ForEach(journalData[dateInfo] ?? [], id: \.id) { journal in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    //
-                                    Text(journal.timeInfo)
-                                        .textStyle(SmallParagraph(color: DesignSystemAsset.darkGray))
-                                        .lineLimit(1)
-                                    //
-                                    Text(journal.content)
-                                        .textStyle(Paragraph())
-                                        .lineLimit(2)
-                                }
-                                .padding(.vertical, 2)
-                            }
-                            .onDelete { indexSet in
-                                deleteItem(at: indexSet, for: dateInfo)
-                            }
-                        } header: {
-                            Text(dateInfo)
-                                .textStyle(SmallTitle(
-                                    weight: .medium,
-                                    color: DesignSystemAsset.darkGray))
-                        }
-                    }
-                }
-                
+                switch listType {
                 //
-                else {
-                    ForEach(journalData[DateFormat.dateToDateInfoString(Date())] ?? [], id: \.id) { journal in
-                        VStack(alignment: .leading, spacing: 4) {
-                            //
-                            Text(journal.timeInfo)
-                                .textStyle(SmallParagraph(color: DesignSystemAsset.darkGray))
-                                .lineLimit(1)
-                            //
-                            Text(journal.content)
-                                .textStyle(Paragraph())
-                                .lineLimit(2)
-                        }
-                        .padding(.vertical, 2)
-                    }
-                    .onDelete { indexSet in
-                        deleteItem(at: indexSet, for: DateFormat.dateToDateInfoString(Date()))
-                    }
+                case .all:
+                    DisplayAllJournals()
+                //
+                case .day(let dateInfo):
+                    DisplayJournals(dateInfo)
+                //
+                case .search(searchText: let searchText):
+                    DisplaySearchJournals(searchText)
                 }
             }
             .listStyle(.plain)
@@ -80,7 +42,55 @@ public struct ListView: View {
         }
         .safeAreaPadding(.bottom, 70)
     }
+
+    @ViewBuilder
+    private func DisplayAllJournals() -> some View {
+        ForEach(journalData.keys.sorted(by: >), id: \.self) { dateInfo in
+            Section {
+                DisplayJournals(dateInfo)
+            } header: {
+                Text(dateInfo)
+                    .textStyle(SmallTitle(weight: .medium,
+                                          color: DesignSystemAsset.darkGray))
+            }
+        }
+    }
     
+    @ViewBuilder
+    private func DisplaySearchJournals(_ searchText: String) -> some View {
+        let searchData = searchJournals(for: searchText)
+        
+        ForEach(searchData.keys.sorted(by: >), id: \.self) { dateInfo in
+            Section {
+                DisplayJournals(dateInfo)
+            } header: {
+                Text(dateInfo)
+                    .textStyle(SmallTitle(weight: .medium,
+                                          color: DesignSystemAsset.darkGray))
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func DisplayJournals(_ dateInfo: String) -> some View {
+        ForEach(journalData[dateInfo] ?? [], id: \.id) { journal in
+            VStack(alignment: .leading, spacing: 4) {
+                //
+                Text(journal.timeInfo)
+                    .textStyle(SmallParagraph(color: DesignSystemAsset.darkGray))
+                    .lineLimit(1)
+                //
+                Text(journal.content)
+                    .textStyle(Paragraph())
+                    .lineLimit(2)
+            }
+            .padding(.vertical, 2)
+        }
+        .onDelete { indexSet in
+            deleteItem(at: indexSet, for: dateInfo)
+        }
+    }
+
     private func deleteItem(
         at indexSet: IndexSet,
         for dateInfo: String
@@ -92,6 +102,18 @@ public struct ListView: View {
                 journalData.removeValue(forKey: dateInfo)
             } else {
                 journalData[dateInfo] = journals
+            }
+        }
+    }
+    
+    private func searchJournals(for text: String) -> [String: [Journal]] {
+        journalData.reduce(into: [String: [Journal]]()) { result, value in
+            let (dateInfo, journals) = value
+            let filteredJournals = journals.filter { journal in
+                journal.content.localizedCaseInsensitiveContains(text)
+            }
+            if !filteredJournals.isEmpty {
+                result[dateInfo] = filteredJournals
             }
         }
     }

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 public struct JournalView: View {
@@ -40,7 +41,11 @@ public struct JournalView: View {
                         .transition(.opacity)
 
                     //
-                    ListView(listType: .day)
+                    ListView(
+                        listType: .day(
+                            dateInfo: DateFormat.dateToDateInfoString(Date())
+                        )
+                    )
                 }
             }
             .animation(.easeInOut, value: viewState)
