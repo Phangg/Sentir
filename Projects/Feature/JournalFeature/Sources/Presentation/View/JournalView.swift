@@ -11,10 +11,10 @@ import Common
 import DesignSystem
 
 public struct JournalView: View {
-    @State private var viewState: JournalViewState = .list
+    @State private var currentJournalViewState: JournalViewState = .list
     @State private var filterState: JournalFilterState = .newest
     @State private var showFilterSheet: Bool = false
-    @State private var selectedMonthAndDates: Date? = nil
+    @State private var selectedMonthAndDates: Date = Date()
     
     public init() { }
 
@@ -23,7 +23,7 @@ public struct JournalView: View {
             //
             VStack(alignment: .trailing, spacing: 0) {
                 //
-                switch viewState {
+                switch currentJournalViewState {
                 case .list:
                     ZStack(alignment: .topTrailing) {
                         //
@@ -45,12 +45,12 @@ public struct JournalView: View {
                     ListView(
                         listType: .day(
                             dateInfo: DateFormat
-                                .dateToDateInfoString(selectedMonthAndDates ?? Date())
+                                .dateToDateInfoString(selectedMonthAndDates)
                         )
                     )
                 }
             }
-            .animation(.easeInOut, value: viewState)
+            .animation(.easeInOut, value: currentJournalViewState)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden()
             .toolbar { journalViewToolbarContent() }
@@ -102,7 +102,7 @@ public struct JournalView: View {
                 .padding(.horizontal, 10)
         }
         //
-        if viewState == .list {
+        if currentJournalViewState == .list {
             ToolbarItem(placement: .topBarTrailing) {
                 //
                 NavigationLink(value: "SearchView") {
@@ -115,18 +115,28 @@ public struct JournalView: View {
             //
             Button {
                 // TODO: -
-                withAnimation {
-                    viewState = viewState == .list ? .calendar : .list
+                updateJournalViewState(for: currentJournalViewState) {
+                    self.selectedMonthAndDates = Date()
                 }
+                
+                
             } label: {
-                Image(systemName: viewState == .list ? "calendar": "list.dash")
+                Image(systemName: currentJournalViewState == .list ? "calendar": "list.dash")
                     .tint(DesignSystemAsset.black)
                     .padding(.trailing, 10)
             }
         }
     }
-}
-
-#Preview {
-    JournalView()
+    
+    private func updateJournalViewState(
+        for state: JournalViewState,
+        completion: @escaping () -> Void
+    ) {
+        withAnimation {
+            currentJournalViewState = state == .list ? .calendar : .list
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            completion()
+        }
+    }
 }

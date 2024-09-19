@@ -28,6 +28,7 @@ public struct FloatingTabBar: View {
                 } label: {
                     HStack(spacing: 5) {
                         Image(systemName: tab.rawValue)
+                            .scaleEffect(tabSelection == tab ? 1.1 : 0.9)
                             .font(.title2)
                             .fontWeight(.medium)
                             .frame(width: 60, height: 40)

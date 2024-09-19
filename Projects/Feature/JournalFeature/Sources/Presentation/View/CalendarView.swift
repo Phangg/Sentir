@@ -13,10 +13,10 @@ import DesignSystem
 public struct CalendarView: View {
     @State private var month: Date = Date()
     @State private var refreshId = UUID()
-    @Binding var selectedMonthAndDates: Date?
+    @Binding var selectedMonthAndDates: Date
     
     public init(
-        selectedMonthAndDates: Binding<Date?>
+        selectedMonthAndDates: Binding<Date>
     ) {
         self._selectedMonthAndDates = selectedMonthAndDates
     }
@@ -176,7 +176,7 @@ public struct CalendarView: View {
                         //
                         let date = getDate(for: idx)
                         let day = Calendar.current.component(.day, from: date)
-                        let isSelected = selectedMonthAndDates == date
+                        let isSelected = DateFormat.calendarDayString(selectedMonthAndDates) == DateFormat.calendarDayString(date)
                         let isToday = DateFormat.calendarDayString(date) == DateFormat.calendarDayString(Date())
                         
                         CalendarCellView(
