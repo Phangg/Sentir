@@ -133,6 +133,7 @@ public struct CalendarView: View {
             //
             Text(month, formatter: DateFormat.calendarHeaderDateFormatter)
                 .textStyle(MediumTitle(weight: .semibold))
+                .frame(width: 100)
             //
             Button {
                 changeMonth(by: 1)
