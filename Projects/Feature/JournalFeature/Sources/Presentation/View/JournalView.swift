@@ -14,6 +14,7 @@ public struct JournalView: View {
     @State private var viewState: JournalViewState = .list
     @State private var filterState: JournalFilterState = .newest
     @State private var showFilterSheet: Bool = false
+    @State private var selectedMonthAndDates: Date? = nil
     
     public init() { }
 
@@ -37,13 +38,14 @@ public struct JournalView: View {
                     }
                 case .calendar:
                     //
-                    CalendarView()
+                    CalendarView(selectedMonthAndDates: $selectedMonthAndDates)
                         .transition(.opacity)
 
                     //
                     ListView(
                         listType: .day(
-                            dateInfo: DateFormat.dateToDateInfoString(Date())
+                            dateInfo: DateFormat
+                                .dateToDateInfoString(selectedMonthAndDates ?? Date())
                         )
                     )
                 }

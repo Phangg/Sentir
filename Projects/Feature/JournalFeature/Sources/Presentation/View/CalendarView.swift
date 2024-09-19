@@ -12,10 +12,14 @@ import DesignSystem
 
 public struct CalendarView: View {
     @State private var month: Date = Date()
-    @State private var selectedMonthAndDates: Date? = nil
     @State private var refreshId = UUID()
+    @Binding var selectedMonthAndDates: Date?
     
-    public init() { }
+    public init(
+        selectedMonthAndDates: Binding<Date?>
+    ) {
+        self._selectedMonthAndDates = selectedMonthAndDates
+    }
     
     public var body: some View {
         VStack(alignment: .leading) {
