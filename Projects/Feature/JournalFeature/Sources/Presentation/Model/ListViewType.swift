@@ -7,7 +7,7 @@
 //
 
 public enum ListViewType {
-    case all
+    case all(sortBy: JournalFilterState)
     case day(dateInfo: String)
     case search(searchText: String)
 }

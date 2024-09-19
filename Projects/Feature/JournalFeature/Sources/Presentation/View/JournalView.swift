@@ -27,7 +27,7 @@ public struct JournalView: View {
                 case .list:
                     ZStack(alignment: .topTrailing) {
                         //
-                        ListView(listType: .all)
+                        ListView(listType: .all(sortBy: filterState))
                             .transition(.opacity)
                         //
                         VStack {

@@ -27,10 +27,10 @@ public struct ListView: View {
                 //
                 switch listType {
                 //
-                case .all:
-                    DisplayAllJournals()
+                case .all(sortBy: let filterState):
+                    DisplayAllJournals(filterState)
                 //
-                case .day(let dateInfo):
+                case .day(dateInfo: let dateInfo):
                     DisplayJournals(dateInfo)
                 //
                 case .search(searchText: let searchText):
@@ -44,8 +44,10 @@ public struct ListView: View {
     }
 
     @ViewBuilder
-    private func DisplayAllJournals() -> some View {
-        ForEach(journalData.keys.sorted(by: >), id: \.self) { dateInfo in
+    private func DisplayAllJournals(_ filterState: JournalFilterState) -> some View {
+        let journalData = filterState == .newest ? journalData.keys.sorted(by: >) : journalData.keys.sorted(by: <)
+        //
+        ForEach(journalData, id: \.self) { dateInfo in
             Section {
                 DisplayJournals(dateInfo)
             } header: {
@@ -59,7 +61,7 @@ public struct ListView: View {
     @ViewBuilder
     private func DisplaySearchJournals(_ searchText: String) -> some View {
         let searchData = searchJournals(for: searchText)
-        
+        //
         ForEach(searchData.keys.sorted(by: >), id: \.self) { dateInfo in
             Section {
                 DisplayJournals(dateInfo)
