@@ -23,7 +23,11 @@ public struct SettingView: View {
     @State private var toggleStates: [SettingModel: Bool] = [:]
     // 비밀번호 설정
     @State private var showPasswordSheetView: Bool = false
-    
+    @State private var didCompletePasswordSetting: Bool = false
+    // 알림 시간 설정
+    @State private var showAlarmSheetView: Bool = false
+    @State private var didCompleteAlarmSetting: Bool = false
+
     public init() {
         // scheme 확인
         setWindowScheme()
@@ -65,9 +69,23 @@ public struct SettingView: View {
         }
         // 비밀번호 설정
         .sheet(isPresented: $showPasswordSheetView, onDismiss: {
-            toggleStates[.lock] = false
+            if !didCompletePasswordSetting {
+                toggleStates[.lock] = false
+            }
         }, content: {
-            PasswordSheetView(showPasswordSheetView: $showPasswordSheetView)
+            PasswordSheetView(showPasswordSheetView: $showPasswordSheetView) {
+                didCompletePasswordSetting = true
+            }
+        })
+        // 알람 설정
+        .sheet(isPresented: $showAlarmSheetView, onDismiss: {
+            if !didCompleteAlarmSetting {
+                toggleStates[.notice] = false
+            }
+        }, content: {
+            TimePickerView(showAlarmSheetView: $showAlarmSheetView) {
+                didCompleteAlarmSetting = true
+            }
         })
         // 다크 모드 / 라이트 모드
         .sheet(isPresented: $showPickerView, onDismiss: {
@@ -141,11 +159,14 @@ public struct SettingView: View {
                 get: { toggleStates[item] ?? false },
                 set: { 
                     // 잠금 설정
-                    if item == .lock {
-                        showPasswordSheetView = true
-                    } else {
-                    // 알림 설정
-                        // TODO: -
+                    if $0 {
+                        if item == .lock {
+                            showPasswordSheetView = true
+                        } else {
+                            // 알림 설정
+                            showAlarmSheetView = true
+                            // TODO: -
+                        }
                     }
                     toggleStates[item] = $0
                 }

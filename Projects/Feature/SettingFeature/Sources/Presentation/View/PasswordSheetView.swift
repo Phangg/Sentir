@@ -20,9 +20,10 @@ struct PasswordSheetView: View {
     @State private var passwordSheetState: PasswordSheetState = .firstSet
     @State private var incorrectPassword = false
     @Binding var showPasswordSheetView: Bool
-    
+
     private let maxPasswordLength: Int = 4
-    
+    let onComplete: () -> Void
+
     var body: some View {
         GeometryReader { geo in
             //
@@ -157,6 +158,7 @@ struct PasswordSheetView: View {
                 if password == passwordRecheck {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         showPasswordSheetView = false
+                        onComplete()
                     }
                 } else {
                     incorrectPassword = true
