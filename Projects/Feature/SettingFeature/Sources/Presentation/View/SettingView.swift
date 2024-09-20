@@ -17,10 +17,12 @@ public struct SettingView: View {
     @Environment(\.colorScheme) private var scheme
     // 다크 모드 / 라이트 모드 설정
     @State private var schemePreviews: [SchemePreview] = []
-    @State private var showSheet: Bool = false
+    @State private var isSchemePreviewVisible: Bool = false
     @State private var overlayWindow: UIWindow?
     // 토글 설정
     @State private var toggleStates: [SettingModel: Bool] = [:]
+    // 비밀번호 설정
+    @State private var showPasswordSheetView: Bool = false
     
     public init() {
         // scheme 확인
@@ -61,6 +63,12 @@ public struct SettingView: View {
             .navigationBarBackButtonHidden()
             .toolbar { settingViewToolbarContent() }
         }
+        // 비밀번호 설정
+        .sheet(isPresented: $showPasswordSheetView, onDismiss: {
+            toggleStates[.lock] = false
+        }, content: {
+            PasswordSheetView(showPasswordSheetView: $showPasswordSheetView)
+        })
         // 다크 모드 / 라이트 모드
         .sheet(isPresented: $showPickerView, onDismiss: {
             schemePreviews = []
@@ -72,7 +80,7 @@ public struct SettingView: View {
             if newValue {
                 generateSchemwPreviews()
             } else {
-                showSheet = false
+                isSchemePreviewVisible = false
             }
         }
         .onAppear {
@@ -131,7 +139,16 @@ public struct SettingView: View {
         case .toggle:
             Toggle("", isOn: Binding(
                 get: { toggleStates[item] ?? false },
-                set: { toggleStates[item] = $0 }
+                set: { 
+                    // 잠금 설정
+                    if item == .lock {
+                        showPasswordSheetView = true
+                    } else {
+                    // 알림 설정
+                        // TODO: -
+                    }
+                    toggleStates[item] = $0
+                }
             ))
             .labelsHidden()
             .tint(scheme == .dark ? DesignSystemAsset.white : DesignSystemAsset.black)
@@ -192,7 +209,7 @@ public struct SettingView: View {
                 
                 removeOverlayImageView()
                 
-                showSheet = true
+                isSchemePreviewVisible = true
             }
         }
     }
@@ -217,8 +234,4 @@ extension ColorScheme {
     var oppsiteInterfaceStyle: UIUserInterfaceStyle {
         return self == .dark ? .light : .dark
     }
-}
-
-#Preview {
-    SettingView()
 }
