@@ -134,6 +134,7 @@ public struct SettingView: View {
                 set: { toggleStates[item] = $0 }
             ))
             .labelsHidden()
+            .tint(scheme == .dark ? DesignSystemAsset.white : DesignSystemAsset.black)
         case .text:
             Text("\(Version.getAppVersion()) (\(Version.getBuildVersion()))")
                 .textStyle(Paragraph())
