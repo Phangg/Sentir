@@ -21,52 +21,50 @@ struct JournalFilterView: View {
             //
             Spacer(minLength: 0)
             //
-            GeometryReader { _ in
-                VStack(alignment: .leading, spacing: 0) {
-                    //
-                    Button {
-                        filterState = .newest
-                        showFilterSheet.toggle()
-                    } label: {
-                        HStack {
-                            Text(JournalFilterState.newest.rawValue)
-                                .textStyle(
-                                    Paragraph(
-                                        weight: filterState == .newest ? .medium : .regular,
-                                        color: filterState == .newest ? DesignSystemAsset.black : DesignSystemAsset.lightGray
-                                    )
+            VStack(alignment: .leading, spacing: 0) {
+                //
+                Button {
+                    filterState = .newest
+                    showFilterSheet.toggle()
+                } label: {
+                    HStack {
+                        Text(JournalFilterState.newest.rawValue)
+                            .textStyle(
+                                Paragraph(
+                                    weight: filterState == .newest ? .medium : .regular,
+                                    color: filterState == .newest ? DesignSystemAsset.black : DesignSystemAsset.lightGray
                                 )
-                            Spacer()
-                            Image(systemName: "checkmark")
-                                .font(.callout)
-                                .tint(filterState == .newest ? DesignSystemAsset.black : .clear)
-                        }
-                        .background(Color.clear)
+                            )
+                        Spacer()
+                        Image(systemName: "checkmark")
+                            .font(.callout)
+                            .tint(filterState == .newest ? DesignSystemAsset.black : .clear)
                     }
-                    .padding(.vertical, 20)
-                    //
-                    Divider()
-                    //
-                    Button {
-                        filterState = .oldest
-                        showFilterSheet.toggle()
-                    } label: {
-                        HStack {
-                            Text(JournalFilterState.oldest.rawValue)
-                                .textStyle(
-                                    Paragraph(
-                                        weight: filterState == .oldest ? .medium : .regular,
-                                        color: filterState == .oldest ? DesignSystemAsset.black : DesignSystemAsset.lightGray
-                                    )
-                                )
-                            Spacer()
-                            Image(systemName: "checkmark")
-                                .font(.callout)
-                                .tint(filterState == .oldest ? DesignSystemAsset.black : .clear)
-                        }
-                    }
-                    .padding(.vertical, 20)
+                    .background(Color.clear)
                 }
+                .padding(.vertical, 20)
+                //
+                Divider()
+                //
+                Button {
+                    filterState = .oldest
+                    showFilterSheet.toggle()
+                } label: {
+                    HStack {
+                        Text(JournalFilterState.oldest.rawValue)
+                            .textStyle(
+                                Paragraph(
+                                    weight: filterState == .oldest ? .medium : .regular,
+                                    color: filterState == .oldest ? DesignSystemAsset.black : DesignSystemAsset.lightGray
+                                )
+                            )
+                        Spacer()
+                        Image(systemName: "checkmark")
+                            .font(.callout)
+                            .tint(filterState == .oldest ? DesignSystemAsset.black : .clear)
+                    }
+                }
+                .padding(.vertical, 20)
             }
         }
         .padding(20)
