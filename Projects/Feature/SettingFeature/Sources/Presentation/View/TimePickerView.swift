@@ -49,6 +49,7 @@ struct TimePickerView: View {
                 Picker("오전 / 오후", selection: $timeOfDay) {
                     ForEach(TimeOfDay.allCases, id: \.self) { timeOfDay in
                         Text(timeOfDay.rawValue)
+                            .textStyle(Paragraph())
                     }
                 }
                 .pickerStyle(.wheel)
@@ -56,6 +57,7 @@ struct TimePickerView: View {
                 Picker("시", selection: $hours) {
                     ForEach(1..<13) { hour in
                         Text(String(format: "%02d", hour))
+                            .textStyle(Paragraph())
                             .tag(hour)
                     }
                 }
@@ -64,6 +66,7 @@ struct TimePickerView: View {
                 Picker("분", selection: $minutes) {
                     ForEach(0..<60) { minute in
                         Text(String(format: "%02d", minute))
+                            .textStyle(Paragraph())
                     }
                 }
                 .pickerStyle(.wheel)
