@@ -27,6 +27,9 @@ public struct SettingView: View {
     // 알림 시간 설정
     @State private var showAlarmSheetView: Bool = false
     @State private var didCompleteAlarmSetting: Bool = false
+    @State private var alarmTime: AlarmTime = AlarmTime(timeOfDay: .pm,
+                                                        hours: 6,
+                                                        minutes: 0)
 
     public init() {
         // scheme 확인
@@ -83,7 +86,7 @@ public struct SettingView: View {
                 toggleStates[.notice] = false
             }
         }, content: {
-            TimePickerView(showAlarmSheetView: $showAlarmSheetView) {
+            TimePickerView(alarmTime: $alarmTime, showAlarmSheetView: $showAlarmSheetView) {
                 didCompleteAlarmSetting = true
             }
         })
@@ -155,28 +158,40 @@ public struct SettingView: View {
                     .padding()
             }
         case .toggle:
-            Toggle("", isOn: Binding(
-                get: { toggleStates[item] ?? false },
-                set: { 
-                    // 잠금 설정
-                    if $0 {
-                        if item == .lock {
-                            showPasswordSheetView = true
-                        } else {
-                            // 알림 설정
-                            showAlarmSheetView = true
-                            // TODO: -
-                        }
-                    }
-                    toggleStates[item] = $0
+            HStack(alignment: .center, spacing: 20) {
+                //
+                if item == .notice, let notice = toggleStates[.notice], notice {
+                    Text("\(alarmTime.timeOfDay.rawValue) \(String(format: "%02d", alarmTime.hours)):\(String(format: "%02d", alarmTime.minutes))")
+                        .textStyle(Paragraph())
                 }
-            ))
-            .labelsHidden()
-            .tint(scheme == .dark ? DesignSystemAsset.white : DesignSystemAsset.black)
+                //
+                Toggle("", isOn: Binding(
+                    get: { toggleStates[item] ?? false },
+                    set: {
+                        if $0 {
+                            // 잠금 설정
+                            if item == .lock {
+                                showPasswordSheetView = true
+                            } else {
+                                // 알림 설정
+                                showAlarmSheetView = true
+                                // TODO: -
+                            }
+                        } else {
+                            didCompletePasswordSetting = $0
+                            didCompleteAlarmSetting = $0
+                        }
+                        toggleStates[item] = $0
+                    }
+                ))
+                .labelsHidden()
+                .tint(scheme == .dark ? DesignSystemAsset.white : DesignSystemAsset.black)
+            }
         case .text:
             Text("\(Version.getAppVersion()) (\(Version.getBuildVersion()))")
                 .textStyle(Paragraph())
         }
+        
     }
     
     @ToolbarContentBuilder

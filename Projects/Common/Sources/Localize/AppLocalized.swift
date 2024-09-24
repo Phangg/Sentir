@@ -6,4 +6,6 @@
 //  Copyright © 2024 Sentir. All rights reserved.
 //
 
-import Foundation
+public enum AppLocalized {
+//    public static let
+}

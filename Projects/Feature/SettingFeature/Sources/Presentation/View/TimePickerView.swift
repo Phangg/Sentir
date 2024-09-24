@@ -9,15 +9,13 @@
 import SwiftUI
 import DesignSystem
 
-enum TimeOfDay: String, CaseIterable {
+public enum TimeOfDay: String, CaseIterable {
     case am = "오전"
     case pm = "오후"
 }
 
 struct TimePickerView: View {
-    @State private var timeOfDay: TimeOfDay = .pm
-    @State private var hours: Int = 6
-    @State private var minutes: Int = 0
+    @Binding var alarmTime: AlarmTime
     @Binding var showAlarmSheetView: Bool
     let onComplete: () -> Void
     
@@ -46,7 +44,7 @@ struct TimePickerView: View {
             //
             HStack {
                 //
-                Picker("오전 / 오후", selection: $timeOfDay) {
+                Picker("오전 / 오후", selection: $alarmTime.timeOfDay) {
                     ForEach(TimeOfDay.allCases, id: \.self) { timeOfDay in
                         Text(timeOfDay.rawValue)
                             .textStyle(Paragraph())
@@ -54,7 +52,7 @@ struct TimePickerView: View {
                 }
                 .pickerStyle(.wheel)
                 //
-                Picker("시", selection: $hours) {
+                Picker("시", selection: $alarmTime.hours) {
                     ForEach(1..<13) { hour in
                         Text(String(format: "%02d", hour))
                             .textStyle(Paragraph())
@@ -63,7 +61,7 @@ struct TimePickerView: View {
                 }
                 .pickerStyle(.wheel)
                 //
-                Picker("분", selection: $minutes) {
+                Picker("분", selection: $alarmTime.minutes) {
                     ForEach(0..<60) { minute in
                         Text(String(format: "%02d", minute))
                             .textStyle(Paragraph())
