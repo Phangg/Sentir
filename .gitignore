@@ -88,6 +88,9 @@ Derived/
 ### Tuist managed dependencies ###
 Tuist/.build
 
+### Signing
+Signing/
+
 ### Config
 Config/
 **.xcconfig
