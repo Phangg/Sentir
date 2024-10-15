@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 struct JournalFilterView: View {
@@ -42,7 +43,7 @@ struct JournalFilterView: View {
                     }
                     .background(Color.clear)
                 }
-                .padding(.vertical, 20)
+                .padding(.vertical, ViewValues.defaultPadding)
                 //
                 Divider()
                 //
@@ -64,10 +65,10 @@ struct JournalFilterView: View {
                             .tint(filterState == .oldest ? DesignSystemAsset.black : .clear)
                     }
                 }
-                .padding(.vertical, 20)
+                .padding(.vertical, ViewValues.defaultPadding)
             }
         }
-        .padding(20)
+        .padding(ViewValues.defaultPadding)
         .frame(maxWidth: .infinity,
                maxHeight: .infinity,
                alignment: .topLeading)
@@ -80,8 +81,8 @@ struct JournalFilterView: View {
             }
             .clipShape(.rect(cornerRadius: 20))
         }
-        .padding(.horizontal, 20)
-        .presentationDetents([.height(220)])
+        .padding(.horizontal, ViewValues.defaultPadding)
+        .presentationDetents([.height(210)])
         .presentationBackground(.clear)
     }
 }

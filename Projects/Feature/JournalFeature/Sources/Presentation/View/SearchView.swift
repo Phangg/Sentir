@@ -22,7 +22,7 @@ public struct SearchView: View {
         ZStack {
             VStack {
                 //
-                SearchViewCustomToolBar()
+                SearchViewCustomToolBar
                 //
                 Spacer(minLength: 0)
                 //
@@ -36,13 +36,13 @@ public struct SearchView: View {
                 case .finish:
                     // TODO: - 검색 결과 전달
                     ListView(listType: .search(searchText: searchText))
-                        .padding(.horizontal, -20)
+                        .padding(.horizontal, -ViewValues.defaultPadding)
                 }
                 //
                 Spacer(minLength: 0)
             }
             .navigationBarBackButtonHidden()
-            .padding(.horizontal, 20)
+            .padding(.horizontal, ViewValues.defaultPadding)
         }
         .onTapGesture {
             isSearchFocused = false
@@ -50,14 +50,14 @@ public struct SearchView: View {
     }
     
     @ViewBuilder
-    fileprivate func SearchViewCustomToolBar() -> some View {
+    fileprivate var SearchViewCustomToolBar: some View {
         HStack {
             //
             Button {
                 self.dismiss()
             } label: {
                 Image(systemName: "arrow.left")
-                    .padding(.trailing, 10)
+                    .padding(.trailing, ViewValues.halfPadding)
             }
             //
             Spacer(minLength: 0)

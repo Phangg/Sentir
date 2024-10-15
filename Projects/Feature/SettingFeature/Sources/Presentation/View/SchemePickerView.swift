@@ -43,7 +43,7 @@ public struct SchemePickerView: View {
                 }
             }
         }
-        .padding(20)
+        .padding(ViewValues.defaultPadding)
         .frame(maxWidth: .infinity,
                maxHeight: .infinity,
                alignment: .topLeading)
@@ -56,7 +56,7 @@ public struct SchemePickerView: View {
             }
             .clipShape(.rect(cornerRadius: 20))
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, ViewValues.defaultPadding)
         .presentationDetents([.height(320)])
         .presentationBackground(.clear)
         .onChange(of: appScheme, initial: true) { oldValue, newValue in

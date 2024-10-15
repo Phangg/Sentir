@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 enum PasswordSheetState: Hashable {
@@ -40,15 +41,15 @@ struct PasswordSheetView: View {
     }
     
     @ViewBuilder
-        private func PasswordView(size: CGSize) -> some View {
+    fileprivate func PasswordView(size: CGSize) -> some View {
         VStack(alignment: .center, spacing: 20) {
             //
             Spacer(minLength: 0)
             //
-            PasswordExplanationText()
+            PasswordExplanationText
             //
-            PasswordIndicator()
-                .padding(.vertical, 10)
+            PasswordIndicator
+                .padding(.vertical, ViewValues.halfPadding)
             //
             Spacer(minLength: 0)
             //
@@ -57,7 +58,7 @@ struct PasswordSheetView: View {
     }
     
     @ViewBuilder
-    private func PasswordExplanationText() -> some View {
+    fileprivate var PasswordExplanationText: some View {
         Text(passwordSheetState == .firstSet ?
              "앱 비밀번호 설정" : "비밀번호 확인")
             .textStyle(MediumTitle(weight: .semibold))
@@ -68,7 +69,7 @@ struct PasswordSheetView: View {
     }
     
     @ViewBuilder
-    private func PasswordIndicator() -> some View {
+    fileprivate var PasswordIndicator: some View {
         HStack(alignment: .center, spacing: 20) {
             ForEach(0..<maxPasswordLength, id: \.self) { idx in
                 Circle()

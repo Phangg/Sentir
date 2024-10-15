@@ -47,7 +47,7 @@ public struct SettingView: View {
                             //
                             Text(item.rawValue)
                                 .textStyle(Paragraph())
-                                .padding(.vertical, 10)
+                                .padding(.vertical, ViewValues.halfPadding)
                             //
                             Spacer()
                             //
@@ -63,9 +63,9 @@ public struct SettingView: View {
                         }
                     }
                 }
-                .padding(20)
+                .padding(ViewValues.defaultPadding)
             }
-            .safeAreaPadding(.bottom, 40)
+            .safeAreaPadding(.bottom, ViewValues.bottomTabArea)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden()
             .toolbar { settingViewToolbarContent() }
@@ -155,7 +155,7 @@ public struct SettingView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.callout)
-                    .padding()
+                    .padding(ViewValues.halfPadding)
             }
         case .toggle:
             HStack(alignment: .center, spacing: 20) {
@@ -199,7 +199,7 @@ public struct SettingView: View {
         ToolbarItem(placement: .topBarLeading) {
             Text("설정")
                 .textStyle(Title(weight: .bold))
-                .padding(.horizontal, 10)
+                .padding(.horizontal, ViewValues.halfPadding)
         }
     }
     

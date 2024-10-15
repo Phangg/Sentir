@@ -11,7 +11,7 @@ import Common
 import DesignSystem
 
 public struct JournalView: View {
-    @State private var currentJournalViewState: JournalViewState = .list
+    @State private var currentJournalViewState: JournalViewState = .calendar
     @State private var filterState: JournalFilterState = .newest
     @State private var showFilterSheet: Bool = false
     @State private var selectedMonthAndDates: Date = Date()
@@ -31,7 +31,7 @@ public struct JournalView: View {
                             .transition(.opacity)
                         //
                         VStack {
-                            JournalListFilterButton()
+                            JournalListFilterButton
                                 .zIndex(1)
                             Spacer()
                         }
@@ -76,7 +76,7 @@ public struct JournalView: View {
     }
     
     @ViewBuilder
-    fileprivate func JournalListFilterButton() -> some View {
+    fileprivate var JournalListFilterButton: some View {
         //
         Button {
             showFilterSheet = true
@@ -89,8 +89,8 @@ public struct JournalView: View {
                     .fontWeight(.medium)
             }
         }
-        .padding(.top, 10)
-        .padding(.horizontal, 20)
+        .padding(.top, ViewValues.smallPadding)
+        .padding(.horizontal, ViewValues.defaultPadding)
     }
     
     @ToolbarContentBuilder
@@ -99,7 +99,7 @@ public struct JournalView: View {
             //
             Text("기록")
                 .textStyle(Title(weight: .bold))
-                .padding(.horizontal, 10)
+                .padding(.horizontal, ViewValues.halfPadding)
         }
         //
         if currentJournalViewState == .list {
@@ -123,7 +123,7 @@ public struct JournalView: View {
             } label: {
                 Image(systemName: currentJournalViewState == .list ? "calendar": "list.dash")
                     .tint(DesignSystemAsset.black)
-                    .padding(.trailing, 10)
+                    .padding(.trailing, ViewValues.halfPadding)
             }
         }
     }

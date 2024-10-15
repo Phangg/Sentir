@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 public enum TimeOfDay: String, CaseIterable {
@@ -71,7 +72,7 @@ struct TimePickerView: View {
             }
             .frame(height: 140)
         }
-        .padding(20)
+        .padding(ViewValues.defaultPadding)
         .frame(maxWidth: .infinity,
                maxHeight: .infinity,
                alignment: .topLeading)
@@ -84,7 +85,7 @@ struct TimePickerView: View {
             }
             .clipShape(.rect(cornerRadius: 20))
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, ViewValues.defaultPadding)
         .presentationDetents([.height(280)])
         .presentationBackground(.clear)
     }

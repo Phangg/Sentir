@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 public struct FloatingTabBar: View {
@@ -34,8 +35,8 @@ public struct FloatingTabBar: View {
                             .frame(width: 60, height: 40)
                     }
                     .foregroundStyle(tabSelection == tab ? activeForegroundColor : DesignSystemAsset.darkGray)
-                    .padding(.vertical, 2)
-                    .padding(.horizontal, 15)
+                    .padding(.vertical, ViewValues.tinyPadding)
+                    .padding(.horizontal, ViewValues.mediumPadding)
                     .contentShape(.rect)
                     .background {
                         if tabSelection == tab {
@@ -52,7 +53,7 @@ public struct FloatingTabBar: View {
                 }
             }
         }
-        .padding(.horizontal, 10)
+        .padding(.horizontal, ViewValues.halfPadding)
         .frame(height: 55)
         .background(
             .background

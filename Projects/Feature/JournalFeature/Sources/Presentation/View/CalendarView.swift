@@ -24,13 +24,13 @@ public struct CalendarView: View {
     public var body: some View {
         VStack(alignment: .leading) {
             //
-            CalendarHeaderView()
+            CalendarHeaderView
             //
-            CalendarGridView()
+            CalendarGridView
                 .id(refreshId)
         }
-        .padding([.horizontal, .bottom], 20)
-        .padding(.top, 10)
+        .padding([.horizontal, .bottom], ViewValues.defaultPadding)
+        .padding(.top, ViewValues.halfPadding)
     }
     
     // 특정 해당 날짜
@@ -119,7 +119,7 @@ public struct CalendarView: View {
     
     //
     @ViewBuilder
-    fileprivate func CalendarHeaderView() -> some View {
+    fileprivate var CalendarHeaderView: some View {
         //
         HStack(alignment: .center, spacing: 20) {
             //
@@ -143,7 +143,7 @@ public struct CalendarView: View {
             }
             .disabled(!canMoveToNextMonth())
         }
-        .padding(.bottom, 10)
+        .padding(.bottom, ViewValues.halfPadding)
         //
         HStack(alignment: .center, spacing: 10) {
             let week = ["일", "월", "화", "수", "목", "금", "토"]
@@ -162,7 +162,7 @@ public struct CalendarView: View {
     
     //
     @ViewBuilder
-    fileprivate func CalendarGridView() -> some View {
+    fileprivate var CalendarGridView: some View {
         let daysInMonth: Int = numberOfDays(in: month)
         let firstWeekday: Int = firstWeekdayOfMonth(in: month) - 1
         let lastDayOfMonthBefore: Int = numberOfDays(in: previousMonth())

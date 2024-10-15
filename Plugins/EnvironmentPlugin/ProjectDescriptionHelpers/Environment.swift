@@ -11,7 +11,7 @@ import ProjectDescription
 public extension String {
     static let appName: String = "Sentir"
     static let displayName: String = "Sentir"
-    static let organizationName: String = "Sentir"
+    static let organizationName: String = "Phang"
 
     static let marketingVersion: Self = "1.0.0"
 

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Common
 import DesignSystem
 
 struct SearchBar: View {
@@ -23,7 +24,7 @@ struct SearchBar: View {
                 prompt: Text("기록 내용 검색")
                     .textStyle(Paragraph(color: DesignSystemAsset.lightGray)) as? Text
             )
-            .padding(.trailing, 30)
+            .padding(.trailing, ViewValues.largePadding)
             //
             .focused(isSearchFocused)
             //
@@ -56,8 +57,8 @@ struct SearchBar: View {
                 }
             }
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
+        .padding(.horizontal, ViewValues.mediumPadding)
+        .padding(.vertical, ViewValues.halfPadding)
         .background(
             RoundedRectangle(cornerRadius: 10)
                 .fill(DesignSystemAsset.darkGray.opacity(0.1))

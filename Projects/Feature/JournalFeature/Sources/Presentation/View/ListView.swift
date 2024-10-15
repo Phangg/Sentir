@@ -38,9 +38,8 @@ public struct ListView: View {
                 }
             }
             .listStyle(.plain)
-            .padding(.top, 5)
         }
-        .safeAreaPadding(.bottom, 70)
+        .safeAreaPadding(.bottom, ViewValues.bottomTabArea + ViewValues.largePadding)
     }
 
     @ViewBuilder
@@ -86,7 +85,7 @@ public struct ListView: View {
                     .textStyle(Paragraph())
                     .lineLimit(2)
             }
-            .padding(.vertical, 2)
+            .padding(.vertical, ViewValues.tinyPadding)
         }
         .onDelete { indexSet in
             deleteItem(at: indexSet, for: dateInfo)
