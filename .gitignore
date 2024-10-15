@@ -90,6 +90,7 @@ Tuist/.build
 
 ### Signing
 Signing/
+Tuist/master.key
 
 ### Config
 Config/
