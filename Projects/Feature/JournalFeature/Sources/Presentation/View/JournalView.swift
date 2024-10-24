@@ -54,7 +54,7 @@ public struct JournalView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden()
             .toolbar { journalViewToolbarContent() }
-            //
+            // TODO: - 수정 필요
             .navigationDestination(for: String.self) { value in
                 switch value {
                 case "SearchView":

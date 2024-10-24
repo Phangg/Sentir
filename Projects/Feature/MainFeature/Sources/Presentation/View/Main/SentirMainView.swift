@@ -13,33 +13,40 @@ import DesignSystem
 public struct SentirMainView: View {
     @AppStorage("AppScheme") private var appScheme: AppScheme = .device
     @Environment(\.colorScheme) private var colorScheme
+    @State private var showDescription: Bool = false
+    @Binding var isTabBarHidden: Bool
 
-    public init() { }
+    public init(isTabBarHidden: Binding<Bool>) {
+        self._isTabBarHidden = isTabBarHidden
+    }
 
     public var body: some View {
-        NavigationStack {
+        GeometryReader { geo in
+            let safeArea = geo.safeAreaInsets
             //
-            ScrollView {
-                LazyVStack(spacing: 10) {
-                    ForEach(1...30, id: \.self) { _ in
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(DesignSystemAsset.lightGray)
-                            .frame(height: 40)
-                    }
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal, 20)
+            NavigationStack {
+                //
+                MainContentView(safeArea: safeArea)
+                    .safeAreaPadding(.bottom, ViewValues.bottomTabArea + ViewValues.largePadding)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarBackButtonHidden()
+                    .toolbar { mainViewToolbarContent() }
             }
-            .safeAreaPadding(.bottom, 70)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden()
-            .toolbar { mainViewToolbarContent() }
-        }
-        .onChange(of: appScheme) { _, _ in
-            updateScheme()
-        }
-        .onAppear {
-            updateScheme()
+            .onChange(of: appScheme) { _, _ in
+                updateScheme()
+            }
+            .onAppear {
+                updateScheme()
+            }
+            //
+            if showDescription {
+                DesignSystemAsset.darkGray.opacity(0.3)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                    .onTapGesture {
+                        showDescription = false
+                    }
+            }
         }
     }
     
@@ -50,19 +57,18 @@ public struct SentirMainView: View {
                 //
                 Text("Sentir")
                     .textStyle(Header(weight: .bold))
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, ViewValues.halfPadding)
                 //
                 Spacer()
             }
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                // TODO: -
-                print("설명 보기")
+                showDescription = true
             } label: {
                 Image(systemName: "questionmark.circle")
                     .tint(DesignSystemAsset.black)
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, ViewValues.halfPadding)
             }
         }
     }
@@ -72,8 +78,4 @@ public struct SentirMainView: View {
             window.overrideUserInterfaceStyle = appScheme == .dark ? .dark : appScheme == .light ? .light : .unspecified
         }
     }
-}
-
-#Preview {
-    SentirMainView()
 }
