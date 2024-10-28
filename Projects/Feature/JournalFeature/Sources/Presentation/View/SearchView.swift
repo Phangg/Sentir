@@ -50,22 +50,18 @@ public struct SearchView: View {
         }
         .onAppear {
             tabBarState.hide()
+            isSearchFocused = true
         }
     }
     
     @ViewBuilder
     fileprivate var SearchViewCustomToolBar: some View {
-        HStack {
+        HStack(spacing: ViewValues.halfPadding) {
             //
-            Button {
+            BackButton(isCutstomView: true) {
                 self.dismiss()
                 tabBarState.show()
-            } label: {
-                Image(systemName: "arrow.left")
-                    .padding(.trailing, ViewValues.halfPadding)
             }
-            //
-            Spacer(minLength: 0)
             //
             SearchBar(searchText: $searchText,
                       searchState: $searchState,

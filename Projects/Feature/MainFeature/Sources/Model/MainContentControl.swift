@@ -14,7 +14,7 @@ enum MainContentType: String, Hashable {
     case withinFiveMinutes = "5분의 시간"
     case oneSentence = "한 문장 요약"
     case resolution = "오늘의 다짐"
-    case freely = "자유롭게 작성"
+    case freely = "자유롭게 작성하기"
     
     var description: String {
         switch self {

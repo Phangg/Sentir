@@ -7,9 +7,14 @@
 //
 
 import SwiftUI
+import Common
+import DesignSystem
 
 struct WithinFiveMinutesJournalView: View {
     var body: some View {
-        Text("WithinFiveMinutesJournalView")
+        VStack {
+            //
+            Text("WithinFiveMinutesJournalView")
+        }
     }
 }
