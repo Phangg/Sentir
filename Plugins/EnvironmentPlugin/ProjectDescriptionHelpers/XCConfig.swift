@@ -11,7 +11,7 @@ public extension Settings {
     static let appDebug: Self = .settings(
         base: .baseSetting
             .setVersion()
-            .setCodeSignManual()
+            .setCodeSignAutomatic()
             .setUserScriptSandboxing()
             .setClangModuleDebugging(),
         configurations: [
@@ -50,20 +50,21 @@ public extension SettingsDictionary {
         )
     }
     
-    func setProvisioning() -> SettingsDictionary {
-        merging(
-            [
-                "PROVISIONING_PROFILE_SPECIFIER": .string("$(APP_PROVISIONING_PROFILE)"),
-                "PROVISIONING_PROFILE": .string("$(APP_PROVISIONING_PROFILE)"),
-            ]
-        )
-    }
+//    func setProvisioning() -> SettingsDictionary {
+//        merging(
+//            [
+//                "PROVISIONING_PROFILE_SPECIFIER": .string("$(APP_PROVISIONING_PROFILE)"),
+//                "PROVISIONING_PROFILE": .string("$(APP_PROVISIONING_PROFILE)"),
+//            ]
+//        )
+//    }
     
-    func setCodeSignManual() -> SettingsDictionary {
+    func setCodeSignAutomatic() -> SettingsDictionary {
         merging(
             [
-                "CODE_SIGN_STYLE": .string("Manual"),
-                "CODE_SIGN_IDENTITY": .string("$(CODE_SIGN_IDENTITY)")
+                "CODE_SIGN_STYLE": .string("Automatic"),
+                "CODE_SIGN_IDENTITY": .string("Apple Development"),
+                "DEVELOPMENT_TEAM": .string(ProjectSecrets.teamId)
             ]
         )
     }

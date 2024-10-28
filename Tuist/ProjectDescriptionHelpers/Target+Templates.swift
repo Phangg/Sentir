@@ -102,7 +102,7 @@ extension Project {
             dependencies: dependencies,
             settings: .settings(
                 base: .init()
-                    .setCodeSignManual(),
+                    .setCodeSignAutomatic(),
                 configurations: [
                     .debug(
                         name: .debug,
