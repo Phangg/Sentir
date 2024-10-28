@@ -11,6 +11,7 @@ import Common
 import DesignSystem
 
 public struct SearchView: View {
+    @EnvironmentObject private var tabBarState: TabBarState
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isSearchFocused: Bool
     @State private var searchText: String = ""
@@ -47,6 +48,9 @@ public struct SearchView: View {
         .onTapGesture {
             isSearchFocused = false
         }
+        .onAppear {
+            tabBarState.hide()
+        }
     }
     
     @ViewBuilder
@@ -55,6 +59,7 @@ public struct SearchView: View {
             //
             Button {
                 self.dismiss()
+                tabBarState.show()
             } label: {
                 Image(systemName: "arrow.left")
                     .padding(.trailing, ViewValues.halfPadding)

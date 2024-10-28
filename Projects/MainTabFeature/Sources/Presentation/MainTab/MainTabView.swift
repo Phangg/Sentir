@@ -14,8 +14,9 @@ import MainFeature
 import SettingFeature
 
 public struct MainTabView: View {
+    @EnvironmentObject private var tabBarState: TabBarState
     @State private var tabSelection: Tab = .main
-    @State private var isTabBarHidden: Bool = false
+    @State private var isDefaultTabBarHidden: Bool = false
     
     public init() { }
 
@@ -30,9 +31,9 @@ public struct MainTabView: View {
                             Image(systemName: Tab.main.rawValue)
                         }
                         .background {
-                            if !isTabBarHidden {
+                            if !isDefaultTabBarHidden {
                                 HideTabBar {
-                                    isTabBarHidden = true
+                                    isDefaultTabBarHidden = true
                                 }
                             }
                         }
@@ -52,8 +53,10 @@ public struct MainTabView: View {
                 }
             }
             // 실제로 사용되는 TabBar
-            FloatingTabBar(tabSelection: $tabSelection)
-                .padding(.horizontal, ViewValues.largePadding)
+            if !tabBarState.isHidden {
+                FloatingTabBar(tabSelection: $tabSelection)
+                    .padding(.horizontal, ViewValues.largePadding)
+            }
         }
         .ignoresSafeArea(.keyboard)
     }
@@ -84,8 +87,4 @@ fileprivate struct HideTabBar: UIViewRepresentable {
     ) {
         //
     }
-}
-
-#Preview {
-    MainTabView()
 }

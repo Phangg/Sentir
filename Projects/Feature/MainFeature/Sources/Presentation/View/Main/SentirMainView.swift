@@ -14,11 +14,8 @@ public struct SentirMainView: View {
     @AppStorage("AppScheme") private var appScheme: AppScheme = .device
     @Environment(\.colorScheme) private var colorScheme
     @State private var showDescription: Bool = false
-    @Binding var isTabBarHidden: Bool
 
-    public init(isTabBarHidden: Binding<Bool>) {
-        self._isTabBarHidden = isTabBarHidden
-    }
+    public init() { }
 
     public var body: some View {
         GeometryReader { geo in
