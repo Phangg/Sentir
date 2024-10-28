@@ -91,6 +91,7 @@ Tuist/.build
 ### Signing
 Signing/
 Tuist/master.key
+ProjectSecrets.swift
 
 ### Config
 Config/
