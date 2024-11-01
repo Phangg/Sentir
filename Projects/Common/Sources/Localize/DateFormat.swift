@@ -12,6 +12,7 @@ public struct DateFormat {
     //
     private static let calendarDayFormatStyle = "MMMM yyyy dd"
     private static let dateInfoFormatStyle = "yyyy년 MMMM dd일 EEEE"
+    private static let monthAndDayInfoFormatStyle = "MMMM dd일 EEEE"
     private static let timeInfoFormatStyle = "a h시 m분"
     //
     public static let calendarHeaderDateFormatter: DateFormatter = {
@@ -40,8 +41,15 @@ public struct DateFormat {
     }
     
     //
+    public static func monthAndDayInfoString(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = monthAndDayInfoFormatStyle
+        return dateFormatter.string(from: date)
+    }
+    
+    //
     public static func calendarDayString(_ date: Date) -> String {
-        //
         let calendarDayFormatter = DateFormatter()
         calendarDayFormatter.dateFormat = calendarDayFormatStyle
         return calendarDayFormatter.string(from: date)

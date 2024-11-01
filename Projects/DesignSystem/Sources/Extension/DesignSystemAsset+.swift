@@ -18,4 +18,6 @@ extension DesignSystemAsset {
     public static var gray006: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.06) }
     //
     public static var white: Color { DesignSystemAsset.customWhite.swiftUIColor }
+    //
+    public static var accent: Color { DesignSystemAsset.point.swiftUIColor}
 }

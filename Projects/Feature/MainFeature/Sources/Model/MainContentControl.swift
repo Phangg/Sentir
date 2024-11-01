@@ -11,16 +11,16 @@ import Common
 
 // MARK: -
 enum MainContentType: String, Hashable {
-    case withinFiveMinutes = "5분의 시간"
+    case withinThreeMinutes = "3분의 시간"
     case oneSentence = "한 문장 요약"
     case resolution = "오늘의 다짐"
     case freely = "자유롭게 작성하기"
     
     var description: String {
         switch self {
-        case .withinFiveMinutes:
+        case .withinThreeMinutes:
             """
-            5분의 타이머가 흘러가는 동안 작성할 수 있어요.
+            3분의 타이머가 흘러가는 동안 작성할 수 있어요.
             """
         case .oneSentence:
             """
@@ -49,7 +49,7 @@ struct MainContentControl: Identifiable, Hashable {
 }
 
 var sampleControls: [MainContentControl] = [
-    .init(symbol: "timer.circle.fill", type: .withinFiveMinutes),
+    .init(symbol: "timer.circle.fill", type: .withinThreeMinutes),
     .init(symbol: "die.face.1.fill", type: .oneSentence),
     .init(symbol: "sparkles", type: .resolution),
     .init(symbol: "pencil.line", type: .freely)

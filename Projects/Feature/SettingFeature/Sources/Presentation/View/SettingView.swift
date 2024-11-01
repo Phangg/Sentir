@@ -185,7 +185,7 @@ public struct SettingView: View {
                     }
                 ))
                 .labelsHidden()
-                .tint(scheme == .dark ? DesignSystemAsset.white : DesignSystemAsset.black)
+                .tint(DesignSystemAsset.accent)
             }
         case .text:
             Text("\(Version.getAppVersion()) (\(Version.getBuildVersion()))")

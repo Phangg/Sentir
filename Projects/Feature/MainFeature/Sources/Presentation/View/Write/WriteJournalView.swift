@@ -19,8 +19,8 @@ struct WriteJournalView: View {
         ZStack {
             Group {
                 switch control.type {
-                case .withinFiveMinutes:
-                    WithinFiveMinutesJournalView()
+                case .withinThreeMinutes:
+                    WithinThreeMinutesJournalView()
                 case .oneSentence:
                     OneSentenceJournalView()
                 case .resolution:
@@ -51,7 +51,15 @@ struct WriteJournalView: View {
         ToolbarItem(placement: .principal) {
             //
             Text(control.type.rawValue)
-                .textStyle(SmallTitle(weight: .bold))
+                .textStyle(SmallTitle(weight: .semibold))
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                // TODO: - 저장
+            } label: {
+                Text("저장하기")
+                    .textStyle(Paragraph(weight: .medium))
+            }
         }
     }
 }
