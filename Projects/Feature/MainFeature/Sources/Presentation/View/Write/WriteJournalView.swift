@@ -57,7 +57,7 @@ struct WriteJournalView: View {
             Button {
                 // TODO: - 저장
             } label: {
-                Text("저장하기")
+                Text("저장")
                     .textStyle(Paragraph(weight: .medium))
             }
         }

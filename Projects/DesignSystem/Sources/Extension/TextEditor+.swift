@@ -9,10 +9,19 @@
 import SwiftUI
 
 extension TextEditor {
-    public func customStyleEditor(
+    //
+    public func defaultCustomStyleEditor(
         _ input: Binding<String>,
         placeholder: String
     ) -> some View {
-        self.modifier(CustomTextEditorStyle(text: input, placeholder: placeholder))
+        self.modifier(DefaultCustomTextEditorStyle(text: input, placeholder: placeholder))
+    }
+    
+    //
+    public func oneSentenceStyleEditor(
+        _ input: Binding<String>,
+        placeholder: String
+    ) -> some View {
+        self.modifier(OneSentenceCustomTextEditorStyle(text: input, placeholder: placeholder))
     }
 }

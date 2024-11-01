@@ -183,7 +183,7 @@ public struct CalendarView: View {
                             day: day,
                             isSelected: isSelected,
                             isToday: isToday,
-                            hasJournalFlag: JournalFlag.low
+                            hasJournalFlag: JournalFlag.high
                         )
                     } else if let prevMonthDate = Calendar.current.date(byAdding: .day, value: idx + lastDayOfMonthBefore, to: previousMonth()) {
                         //
@@ -192,7 +192,7 @@ public struct CalendarView: View {
                         CalendarCellView(
                             day: day,
                             isCurrentMonthDay: false,
-                            hasJournalFlag: JournalFlag.medium
+                            hasJournalFlag: JournalFlag.low
                         )
                     }
                 }
