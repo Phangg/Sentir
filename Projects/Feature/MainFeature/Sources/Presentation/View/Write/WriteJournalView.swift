@@ -21,8 +21,8 @@ struct WriteJournalView: View {
                 switch control.type {
                 case .withinThreeMinutes:
                     WithinThreeMinutesJournalView()
-                case .oneSentence:
-                    OneSentenceJournalView()
+                case .voiceRecording:
+                    VoiceRecordingJournalView()
                 case .resolution:
                     ResolutionJournalView()
                 case .freely:

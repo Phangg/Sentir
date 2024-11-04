@@ -18,10 +18,10 @@ extension TextEditor {
     }
     
     //
-    public func oneSentenceStyleEditor(
+    public func resolutionJournalStyleEditor(
         _ input: Binding<String>,
         placeholder: String
     ) -> some View {
-        self.modifier(OneSentenceCustomTextEditorStyle(text: input, placeholder: placeholder))
+        self.modifier(ResolutionJournalStyleEditorStyle(text: input, placeholder: placeholder))
     }
 }

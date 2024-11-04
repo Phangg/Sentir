@@ -28,13 +28,13 @@ public struct DefaultCustomTextEditorStyle: ViewModifier {
             .lineSpacing(10)
             .scrollContentBackground(.hidden)
             .autocorrectionDisabled(true)
-            .textInputAutocapitalization(.none)
+            .textInputAutocapitalization(.never)
             .padding(.horizontal, ViewValues.halfPadding)
     }
 }
 
-// MARK: - 한 문장 요약에서 쓸 텍스트 에디터
-public struct OneSentenceCustomTextEditorStyle: ViewModifier {
+// MARK: - 다짐에서 쓸 텍스트 에디터
+public struct ResolutionJournalStyleEditorStyle: ViewModifier {
     @Binding var text: String
     let placeholder: String
     
@@ -53,7 +53,7 @@ public struct OneSentenceCustomTextEditorStyle: ViewModifier {
             .contentMargins(ViewValues.halfPadding)
             .scrollContentBackground(.hidden)
             .autocorrectionDisabled(true)
-            .textInputAutocapitalization(.none)
+            .textInputAutocapitalization(.never)
             .background {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(DesignSystemAsset.gray006)

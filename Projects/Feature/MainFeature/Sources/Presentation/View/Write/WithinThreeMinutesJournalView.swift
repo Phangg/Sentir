@@ -50,7 +50,7 @@ struct WithinThreeMinutesJournalView: View {
                 //
                 TextEditor(text: $journalText)
                     .defaultCustomStyleEditor($journalText,
-                                       placeholder: "음.. 오늘은 어떤 하루였고 이러쿵 저러쿵..")
+                                              placeholder: "음.. 오늘은 어떤 하루였고 이러쿵 저러쿵..")
                     .focused($focusState)
                     .toolbar {
                         ToolbarItem(placement: .keyboard) {
