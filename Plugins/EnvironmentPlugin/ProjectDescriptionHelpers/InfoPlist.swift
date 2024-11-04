@@ -27,6 +27,8 @@ public extension [String: Plist.Value] {
         "CFBundleShortVersionString": .shortVersion,
         "CFBundleVersion": .version,
         "CFBundleDisplayName": "$(APP_DISPLAY_NAME)",
+        "NSSpeechRecognitionUsageDescription": "글을 기록하기 위해, 음성 인식 사용 권한을 허용하시겠습니까?",
+        "NSMicrophoneUsageDescription": "글을 기록하기 위해, 마이크 사용 권한을 허용하시겠습니까?"
     ]
     
     static let framework: Self = [

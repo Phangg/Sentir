@@ -13,13 +13,17 @@ public final class HapticManager {
     
     public static let shared = HapticManager()
     
-    private var generator: UIImpactFeedbackGenerator?
-    
     private init() { }
     
     public func triggerImpact(style: UIImpactFeedbackGenerator.FeedbackStyle) {
-        generator = UIImpactFeedbackGenerator(style: style)
-        generator?.prepare()
-        generator?.impactOccurred()
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.prepare()
+        generator.impactOccurred()
+    }
+    
+    public func triggerNotification(type: UINotificationFeedbackGenerator.FeedbackType) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.prepare()
+        generator.notificationOccurred(type)
     }
 }
