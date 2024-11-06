@@ -16,7 +16,16 @@ struct FreelyJournalView: View {
     
     var body: some View {
         ZStack {
-            VStack(spacing: ViewValues.halfPadding) {
+            VStack(alignment: .leading, spacing: ViewValues.halfPadding) {
+                //
+                HStack(alignment: .center) {
+                    //
+                    Text(DateFormat.monthAndDayInfoString(Date()))
+                        .textStyle(Paragraph(weight: .light))
+                    //
+                    Spacer()
+                }
+                .padding(.horizontal, ViewValues.halfPadding)
                 //
                 TextEditor(text: $journalText)
                     .defaultCustomStyleEditor($journalText,

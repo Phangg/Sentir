@@ -16,7 +16,13 @@ struct ResolutionJournalView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            VStack(alignment: .center) {
+            VStack(alignment: .center, spacing: ViewValues.halfPadding) {
+                //
+                Text(DateFormat.monthAndDayInfoString(Date()))
+                    .textStyle(Paragraph(weight: .light))
+                    .padding(.top, 80)
+                    .padding(.horizontal, ViewValues.largePadding)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 //
                 TextEditor(text: $journalText)
                     .resolutionJournalStyleEditor($journalText,
@@ -35,7 +41,6 @@ struct ResolutionJournalView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .frame(height: 250)
-                    .padding(.top, 80)
                 //
                 Spacer()
             }

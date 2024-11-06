@@ -37,7 +37,7 @@ struct VoiceRecordingJournalView: View {
                         VStack(alignment: .leading, spacing: ViewValues.defaultPadding) {
                             //
                             if speechRecognizer.isRecording {
-                                Text("음성을 기록중입니다")
+                                Text("\(DateFormat.monthAndDayInfoString(Date()))의 음성을 기록 중입니다")
                                     .textStyle(Paragraph(color: DesignSystemAsset.accent))
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .opacity(textOpacity)
@@ -79,6 +79,7 @@ struct VoiceRecordingJournalView: View {
         .onDisappear {
             endSpeechRecognizer()
         }
+        //
         .alert("권한이 필요합니다", isPresented: $speechRecognizer.showPermissionAlert) {
             //
             Button {
