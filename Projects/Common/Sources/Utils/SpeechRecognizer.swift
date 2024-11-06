@@ -13,14 +13,16 @@ import SwiftUI
 @MainActor
 public class SpeechRecognizer: ObservableObject {
     @Published public var transcript: String = ""
-    
+    @Published public var showPermissionAlert = false
+    @Published public private(set) var isRecording = false
+    @Published public var isFinishCheckPermissions = false
+
     private var audioEngine: AVAudioEngine?
     private var request: SFSpeechAudioBufferRecognitionRequest?
     private var task: SFSpeechRecognitionTask?
     private let recognizer: SFSpeechRecognizer?
     
     // 음성 인식 init
-    // 첫 사용 시, 접근 권한 허용 요청
     public init() {
         recognizer = SFSpeechRecognizer()
         guard recognizer != nil else {
@@ -28,32 +30,43 @@ public class SpeechRecognizer: ObservableObject {
             return
         }
         
+        // 접근 권한 허용 요청
         Task {
-            do {
-                guard await SFSpeechRecognizer.hasAuthorizationToRecognize() else {
-                    throw STTRecognizerError.notAuthorizedToRecognize
-                }
-                guard await AVAudioSession.sharedInstance().hasPermissionToRecord() else {
-                    throw STTRecognizerError.notPermittedToRecord
-                }
-            } catch {
-                transcribe(error)
+            guard await checkAndRequestPermissions() else {
+                return
             }
+            isFinishCheckPermissions = true
         }
     }
     
-    // 시작
+    // 권한 체크 및 요청 메서드
+    public func checkAndRequestPermissions() async -> Bool {
+        let speechAuthorized = await SFSpeechRecognizer.hasAuthorizationToRecognize()
+        let audioAuthorized = await AVAudioSession.sharedInstance().hasPermissionToRecord()
+        
+        guard speechAuthorized && audioAuthorized else {
+            showPermissionAlert = true
+            transcribe(STTRecognizerError.notAuthorizedToRecognize)
+            return false
+        }
+        return true
+    }
+    
+    // 시작 및 권한 다시 체크
     public func startTranscribing() {
         Task {
+            guard await checkAndRequestPermissions() else { return }
             transcribe()
+            isRecording = true
         }
     }
-    
+
     // 리셋
     public func resetTranscript() {
         Task {
             reset()
             transcript = ""
+            isRecording = false
         }
     }
     
@@ -61,6 +74,7 @@ public class SpeechRecognizer: ObservableObject {
     public func stopTranscribing() {
         Task {
             reset()
+            isRecording = false
         }
     }
     
@@ -77,9 +91,10 @@ public class SpeechRecognizer: ObservableObject {
             let (audioEngine, request) = try Self.prepareEngine()
             self.audioEngine = audioEngine
             self.request = request
-            self.task = recognizer.recognitionTask(with: request, resultHandler: { [weak self] result, error in
+            
+            self.task = recognizer.recognitionTask(with: request) { [weak self] result, error in
                 self?.recognitionHandler(audioEngine: audioEngine, result: result, error: error)
-            })
+            }
         } catch {
             self.reset()
             self.transcribe(error)
@@ -118,17 +133,26 @@ public class SpeechRecognizer: ObservableObject {
     }
     
     // 음성 인식 결과 처리
-    private func recognitionHandler(audioEngine: AVAudioEngine, result: SFSpeechRecognitionResult?, error: Error?) {
+    private func recognitionHandler(
+        audioEngine: AVAudioEngine,
+        result: SFSpeechRecognitionResult?,
+        error: Error?
+    ) {
         let receivedFinalResult = result?.isFinal ?? false
         let receivedError = error != nil
         
         if receivedFinalResult || receivedError {
             audioEngine.stop()
             audioEngine.inputNode.removeTap(onBus: 0)
+            isRecording = false
         }
         
         if let result {
             transcribe(result.bestTranscription.formattedString)
+        }
+        
+        if let error {
+            transcribe(error)
         }
     }
     
