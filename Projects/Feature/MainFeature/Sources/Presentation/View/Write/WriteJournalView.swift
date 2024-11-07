@@ -13,30 +13,28 @@ import DesignSystem
 struct WriteJournalView: View {
     @EnvironmentObject private var tabBarState: TabBarState
     @Environment(\.dismiss) private var dismiss
-    var control: MainContentControl
+    var control: JournalContentControl
     
     var body: some View {
-        ZStack {
-            Group {
-                switch control.type {
-                case .withinThreeMinutes:
-                    WithinThreeMinutesJournalView()
-                case .voiceRecording:
-                    VoiceRecordingJournalView()
-                case .resolution:
-                    ResolutionJournalView()
-                case .freely:
-                    FreelyJournalView()
-                }
+        Group {
+            switch control.type {
+            case .withinThreeMinutes:
+                WithinThreeMinutesJournalView()
+            case .voiceRecording:
+                VoiceRecordingJournalView()
+            case .resolution:
+                ResolutionJournalView()
+            case .freely:
+                FreelyJournalView()
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden()
-            .toolbar { writeJournalViewToolbarContent() }
-            .onAppear {
-                tabBarState.hide()
-            }
-            .tint(DesignSystemAsset.black)
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
+        .toolbar { writeJournalViewToolbarContent() }
+        .onAppear {
+            tabBarState.hide()
+        }
+        .tint(DesignSystemAsset.black)
     }
     
     @ToolbarContentBuilder

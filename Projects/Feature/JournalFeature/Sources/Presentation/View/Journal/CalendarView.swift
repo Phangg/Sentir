@@ -10,18 +10,18 @@ import SwiftUI
 import Common
 import DesignSystem
 
-public struct CalendarView: View {
+struct CalendarView: View {
     @State private var month: Date = Date()
     @State private var refreshId = UUID()
     @Binding var selectedMonthAndDates: Date
     
-    public init(
+    init(
         selectedMonthAndDates: Binding<Date>
     ) {
         self._selectedMonthAndDates = selectedMonthAndDates
     }
     
-    public var body: some View {
+    var body: some View {
         VStack(alignment: .leading) {
             //
             CalendarHeaderView
@@ -178,12 +178,13 @@ public struct CalendarView: View {
                         let day = Calendar.current.component(.day, from: date)
                         let isSelected = DateFormat.calendarDayString(selectedMonthAndDates) == DateFormat.calendarDayString(date)
                         let isToday = DateFormat.calendarDayString(date) == DateFormat.calendarDayString(Date())
+                        let hasJournalFlag = getJournalFlag(for: date)
                         
                         CalendarCellView(
                             day: day,
                             isSelected: isSelected,
                             isToday: isToday,
-                            hasJournalFlag: JournalFlag.high
+                            hasJournalFlag: hasJournalFlag
                         )
                     } else if let prevMonthDate = Calendar.current.date(byAdding: .day, value: idx + lastDayOfMonthBefore, to: previousMonth()) {
                         //
@@ -192,7 +193,7 @@ public struct CalendarView: View {
                         CalendarCellView(
                             day: day,
                             isCurrentMonthDay: false,
-                            hasJournalFlag: JournalFlag.low
+                            hasJournalFlag: JournalFlag.nothing
                         )
                     }
                 }
@@ -203,6 +204,23 @@ public struct CalendarView: View {
                     }
                 }
             }
+        }
+    }
+    
+    func getJournalFlag(for date: Date) -> JournalFlag {
+        let dateString = DateFormat.dateToDateInfoString(date)
+        
+        // TODO: - 현재 샘플 데이터 사용 중
+        guard let journals = JournalData.sample[dateString] else {
+            return .nothing
+        }
+        
+        if journals.count == JournalFlag.low.rawValue {
+            return .low
+        } else if journals.count <= JournalFlag.medium.rawValue {
+            return .medium
+        } else {
+            return .high
         }
     }
 }

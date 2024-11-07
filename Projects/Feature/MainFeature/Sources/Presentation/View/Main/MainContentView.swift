@@ -14,7 +14,7 @@ import DesignSystem
 final class ScrollManager: ObservableObject {
     @Published var currentIndex: Int = 0
     @Published var scrollDirection: ScrollDirection = .none
-    @Published var controls: [MainContentControl] = []
+    @Published var controls: [JournalContentControl] = []
     private let scrollInterval: TimeInterval = 0.016
     static let scrollSpeed: CGFloat = 15
 
@@ -59,8 +59,8 @@ final class ScrollManager: ObservableObject {
 }
 
 struct MainContentView: View {
-    @State private var controls: [MainContentControl] = sampleControls
-    @State private var selectedControl: MainContentControl?
+    @State private var controls: [JournalContentControl] = sampleControls
+    @State private var selectedControl: JournalContentControl?
     @State private var selectedControlFrame: CGRect = .zero
     @State private var selectedControlScale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
@@ -101,7 +101,7 @@ struct MainContentView: View {
                 .padding(.horizontal, ViewValues.defaultPadding)
             }
             .overlay(DraggedControlOverlay)
-            .navigationDestination(for: MainContentControl.self) { control in
+            .navigationDestination(for: JournalContentControl.self) { control in
                 WriteJournalView(control: control)
             }
         }
@@ -123,7 +123,7 @@ struct MainContentView: View {
     }
     
     private func customCombinedGesture(
-        _ control: MainContentControl,
+        _ control: JournalContentControl,
         proxy: ScrollViewProxy
     ) -> some Gesture {
         LongPressGesture(minimumDuration: 0.25)
@@ -220,7 +220,7 @@ struct MainContentView: View {
 }
 
 struct ControlBoxView: View {
-    var control: MainContentControl
+    var control: JournalContentControl
     
     var body: some View {
         //

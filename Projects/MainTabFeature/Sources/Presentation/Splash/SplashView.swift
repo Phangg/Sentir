@@ -15,7 +15,3 @@ public struct SplashView: View {
         Text("Splash View")
     }
 }
-
-#Preview {
-    SplashView()
-}

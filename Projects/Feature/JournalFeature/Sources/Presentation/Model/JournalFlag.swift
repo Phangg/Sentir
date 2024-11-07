@@ -9,18 +9,18 @@
 import SwiftUI
 import DesignSystem
 
-public enum JournalFlag {
-    case nothing
-    case low
-    case medium
-    case high
+public enum JournalFlag: Int {
+    case nothing = 0
+    case low = 1
+    case medium = 3
+    case high = 5
 
     public var flagColor: Color {
         switch self {
         case .nothing:
             Color.clear
         case .low:
-            DesignSystemAsset.accent.opacity(0.2)
+            DesignSystemAsset.accent.opacity(0.1)
         case .medium:
             DesignSystemAsset.accent.opacity(0.5)
         case .high:
