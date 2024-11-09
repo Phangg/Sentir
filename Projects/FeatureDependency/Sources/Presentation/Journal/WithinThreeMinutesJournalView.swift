@@ -16,7 +16,8 @@ struct WithinThreeMinutesJournalView: View {
     @State private var timer: Timer?
     @State private var totalTime: CGFloat = 3
     @State private var extensionCount: Int = 0
-    @State private var journalText: String = ""
+    @Binding var viewState: JournalViewState
+    @Binding var journalText: String
     private let maxExtensions = 4
 
     var body: some View {
@@ -25,7 +26,9 @@ struct WithinThreeMinutesJournalView: View {
                 //
                 VStack(alignment: .leading, spacing: ViewValues.halfPadding) {
                     //
-                    TimeProgressView
+                    if viewState != .detail {
+                        TimeProgressView
+                    }
                     //
                     HStack(alignment: .center) {
                         //
@@ -34,47 +37,69 @@ struct WithinThreeMinutesJournalView: View {
                         //
                         Spacer()
                         //
-                        Button {
-                            clickAddTimeButton()
-                        } label: {
-                            Text("+ 30초")
-                                .textStyle(Paragraph(weight: .medium))
-                                .strikethrough(extensionCount >= maxExtensions,
-                                               color: DesignSystemAsset.black)
-                                .opacity(extensionCount >= maxExtensions ? 0.3 : 1.0)
+                        if viewState != .detail {
+                            Button {
+                                clickAddTimeButton()
+                            } label: {
+                                Text("+ 30초")
+                                    .textStyle(Paragraph(weight: .medium))
+                                    .strikethrough(extensionCount >= maxExtensions,
+                                                   color: DesignSystemAsset.black)
+                                    .opacity(extensionCount >= maxExtensions ? 0.3 : 1.0)
+                            }
+                            .disabled(extensionCount >= maxExtensions)
                         }
-                        .disabled(extensionCount >= maxExtensions)
                     }
                     .padding(.horizontal, ViewValues.halfPadding)
                 }
                 //
-                TextEditor(text: $journalText)
-                    .defaultCustomStyleEditor($journalText,
-                                              placeholder: "음.. 오늘은 어떤 하루였고 이러쿵 저러쿵..")
-                    .focused($focusState)
-                    .toolbar {
-                        ToolbarItem(placement: .keyboard) {
-                            Button {
-                                focusState = false
-                            } label: {
-                                Image(systemName: "keyboard.chevron.compact.down")
-                                Text("키보드 내리기")
-                                    .textStyle(Paragraph(weight: .light))
+                if viewState != .detail {
+                    //
+                    TextEditor(text: $journalText)
+                        .defaultCustomStyleEditor($journalText,
+                                                  placeholder: "음.. 오늘은 어떤 하루였고 이러쿵 저러쿵..")
+                        .focused($focusState)
+                        .toolbar {
+                            ToolbarItem(placement: .keyboard) {
+                                Button {
+                                    focusState = false
+                                } label: {
+                                    Image(systemName: "keyboard.chevron.compact.down")
+                                    Text("키보드 내리기")
+                                        .textStyle(Paragraph(weight: .light))
+                                }
                             }
                         }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    //
+                    Group {
+                        Text(journalText)
+                            .textStyle(Paragraph())
+                            .lineSpacing(10)
+                            .padding(.top, ViewValues.halfPadding)
+                        //
+                        Spacer(minLength: 0)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.horizontal, ViewValues.halfPadding)
+                }
             }
         }
         .onTapGesture {
-            focusState = false
+            if viewState != .detail {
+                focusState = false
+            }
         }
         .onAppear {
-            startTimer()
-            focusState = true
+            if viewState != .detail {
+                startTimer()
+                focusState = true
+            }
         }
         .onDisappear {
-            cancelTimer()
+            if viewState != .detail {
+                cancelTimer()
+            }
         }
     }
     

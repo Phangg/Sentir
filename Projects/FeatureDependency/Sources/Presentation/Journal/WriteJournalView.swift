@@ -10,22 +10,38 @@ import SwiftUI
 import Common
 import DesignSystem
 
-struct WriteJournalView: View {
+public struct WriteJournalView: View {
     @EnvironmentObject private var tabBarState: TabBarState
     @Environment(\.dismiss) private var dismiss
-    var control: JournalContentControl
+    @State private var journalText: String
+    @State private var viewState: JournalViewState
+    let journalType: JournalType
     
-    var body: some View {
+    public init(
+        viewState: JournalViewState,
+        journalType: JournalType,
+        journalText: String = ""
+    ) {
+        self.viewState = viewState
+        self.journalType = journalType
+        self.journalText = journalText
+    }
+    
+    public var body: some View {
         Group {
-            switch control.type {
+            switch journalType {
             case .withinThreeMinutes:
-                WithinThreeMinutesJournalView()
+                WithinThreeMinutesJournalView(viewState: $viewState,
+                                              journalText: $journalText)
             case .voiceRecording:
-                VoiceRecordingJournalView()
+                VoiceRecordingJournalView(viewState: $viewState,
+                                          journalText: $journalText)
             case .resolution:
-                ResolutionJournalView()
+                ResolutionJournalView(viewState: $viewState,
+                                      journalText: $journalText)
             case .freely:
-                FreelyJournalView()
+                FreelyJournalView(viewState: $viewState,
+                                  journalText: $journalText)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -48,7 +64,7 @@ struct WriteJournalView: View {
         }
         ToolbarItem(placement: .principal) {
             //
-            Text(control.type.rawValue)
+            Text(journalType.rawValue)
                 .textStyle(SmallTitle(weight: .semibold))
         }
         ToolbarItem(placement: .topBarTrailing) {

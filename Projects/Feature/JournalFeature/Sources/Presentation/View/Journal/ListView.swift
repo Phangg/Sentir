@@ -9,6 +9,7 @@
 import SwiftUI
 import Common
 import DesignSystem
+import FeatureDependency
 
 public struct ListView: View {
     @State private var journalData = JournalData.sample
@@ -40,6 +41,11 @@ public struct ListView: View {
             .listStyle(.plain)
         }
         .safeAreaPadding(.bottom, ViewValues.bottomTabArea + ViewValues.largePadding)
+        .navigationDestination(for: Journal.self) { journal in
+            WriteJournalView(viewState: .detail,
+                             journalType: journal.type,
+                             journalText: journal.content)
+        }
     }
 
     @ViewBuilder
@@ -75,17 +81,20 @@ public struct ListView: View {
     @ViewBuilder
     private func DisplayJournals(_ dateInfo: String) -> some View {
         ForEach(journalData[dateInfo] ?? [], id: \.id) { journal in
-            VStack(alignment: .leading, spacing: 4) {
-                //
-                Text(journal.timeInfo)
-                    .textStyle(SmallParagraph(color: DesignSystemAsset.darkGray))
-                    .lineLimit(1)
-                //
-                Text(journal.content)
-                    .textStyle(Paragraph())
-                    .lineLimit(2)
+            //
+            NavigationLink(value: journal) {
+                VStack(alignment: .leading, spacing: 4) {
+                    //
+                    Text(journal.timeInfo)
+                        .textStyle(SmallParagraph(color: DesignSystemAsset.darkGray))
+                        .lineLimit(1)
+                    //
+                    Text(journal.content)
+                        .textStyle(Paragraph())
+                        .lineLimit(2)
+                }
+                .padding(.vertical, ViewValues.tinyPadding)
             }
-            .padding(.vertical, ViewValues.tinyPadding)
         }
         .onDelete { indexSet in
             deleteItem(at: indexSet, for: dateInfo)

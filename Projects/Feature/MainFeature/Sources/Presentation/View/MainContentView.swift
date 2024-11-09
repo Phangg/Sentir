@@ -9,6 +9,7 @@
 import SwiftUI
 import Common
 import DesignSystem
+import FeatureDependency
 
 @MainActor
 final class ScrollManager: ObservableObject {
@@ -102,7 +103,8 @@ struct MainContentView: View {
             }
             .overlay(DraggedControlOverlay)
             .navigationDestination(for: JournalContentControl.self) { control in
-                WriteJournalView(control: control)
+                WriteJournalView(viewState: .create,
+                                 journalType: control.type)
             }
         }
     }

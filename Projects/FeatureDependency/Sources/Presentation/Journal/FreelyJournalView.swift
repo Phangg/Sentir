@@ -12,7 +12,8 @@ import DesignSystem
 
 struct FreelyJournalView: View {
     @FocusState private var focusState: Bool
-    @State private var journalText: String = ""
+    @Binding var viewState: JournalViewState
+    @Binding var journalText: String
     
     var body: some View {
         ZStack {
