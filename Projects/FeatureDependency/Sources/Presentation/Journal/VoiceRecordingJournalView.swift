@@ -18,11 +18,8 @@ struct VoiceRecordingJournalView: View {
     @State private var showCountdown = true
     @State private var countdown: Int = 3
     @State private var textOpacity: Double = 1.0
-    @Binding var viewState: JournalViewState
-    // TODO: - 현재는 speechRecognizer.transcript 사용 중
-    /// 수정 방법에 대한 기획 구체화 후 체크 및 수정 필요
-    @Binding var journalText: String
     private let scrollToId = "SCROLL_TO_BOTTOM"
+    let dateInfo: String
 
     var body: some View {
         ZStack {
@@ -41,7 +38,7 @@ struct VoiceRecordingJournalView: View {
                         VStack(alignment: .leading, spacing: ViewValues.defaultPadding) {
                             //
                             if speechRecognizer.isRecording {
-                                Text("\(DateFormat.monthAndDayInfoString(Date()))의 음성을 기록 중입니다")
+                                Text("\(dateInfo)의 음성을 기록 중입니다")
                                     .textStyle(Paragraph(color: DesignSystemAsset.accent))
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .opacity(textOpacity)

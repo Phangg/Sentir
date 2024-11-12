@@ -44,7 +44,8 @@ public struct ListView: View {
         .navigationDestination(for: Journal.self) { journal in
             WriteJournalView(viewState: .detail,
                              journalType: journal.type,
-                             journalText: journal.content)
+                             journalText: journal.content,
+                             dateInfo: journal.dateInfo)
         }
     }
 

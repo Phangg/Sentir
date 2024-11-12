@@ -19,6 +19,7 @@ struct WithinThreeMinutesJournalView: View {
     @Binding var viewState: JournalViewState
     @Binding var journalText: String
     private let maxExtensions = 4
+    let dateInfo: String
 
     var body: some View {
         ZStack {
@@ -32,7 +33,7 @@ struct WithinThreeMinutesJournalView: View {
                     //
                     HStack(alignment: .center) {
                         //
-                        Text(DateFormat.monthAndDayInfoString(Date()))
+                        Text(dateInfo)
                             .textStyle(Paragraph(weight: .light))
                         //
                         Spacer()
@@ -73,15 +74,12 @@ struct WithinThreeMinutesJournalView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     //
-                    Group {
+                    DynamicScrollView {
                         Text(journalText)
                             .textStyle(Paragraph())
                             .lineSpacing(10)
-                            .padding(.top, ViewValues.halfPadding)
-                        //
-                        Spacer(minLength: 0)
+                            .padding([.top, .horizontal], ViewValues.halfPadding)
                     }
-                    .padding(.horizontal, ViewValues.halfPadding)
                 }
             }
         }

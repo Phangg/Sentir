@@ -20,7 +20,7 @@ public struct DefaultCustomTextEditorStyle: ViewModifier {
                 Text(placeholder)
                     .textStyle(Paragraph(color: text.isEmpty ? DesignSystemAsset.lightGray : .clear))
                     .lineSpacing(10)
-                    .padding(.top, ViewValues.halfPadding)
+                    .padding(.top, ViewValues.smallPadding)
                     .padding(.leading, ViewValues.smallPadding + ViewValues.tinyPadding)
             }
             .font(.callout)
@@ -29,7 +29,15 @@ public struct DefaultCustomTextEditorStyle: ViewModifier {
             .scrollContentBackground(.hidden)
             .autocorrectionDisabled(true)
             .textInputAutocapitalization(.never)
-            .padding(.horizontal, ViewValues.halfPadding)
+            .padding(.leading, ViewValues.halfPadding)
+            .onAppear {
+                UITextView.appearance().textContainerInset = UIEdgeInsets(
+                    top: .zero,
+                    left: .zero,
+                    bottom: .zero,
+                    right: ViewValues.halfPadding
+                )
+            }
     }
 }
 

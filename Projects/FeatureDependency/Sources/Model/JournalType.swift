@@ -37,4 +37,13 @@ public enum JournalType: String, Hashable {
             """
         }
     }
+    
+    public var isEditable: Bool {
+        switch self {
+        case .resolution, .freely:
+            true
+        case .withinThreeMinutes, .voiceRecording:
+            false
+        }
+    }
 }

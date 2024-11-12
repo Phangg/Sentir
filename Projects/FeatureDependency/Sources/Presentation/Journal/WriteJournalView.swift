@@ -16,32 +16,45 @@ public struct WriteJournalView: View {
     @State private var journalText: String
     @State private var viewState: JournalViewState
     let journalType: JournalType
+    let dateInfo: String
     
     public init(
         viewState: JournalViewState,
         journalType: JournalType,
-        journalText: String = ""
+        journalText: String = "",
+        dateInfo: String = DateFormat.monthAndDayInfoString(Date())
     ) {
         self.viewState = viewState
         self.journalType = journalType
         self.journalText = journalText
+        self.dateInfo = dateInfo
     }
     
     public var body: some View {
-        Group {
+        ZStack {
             switch journalType {
             case .withinThreeMinutes:
                 WithinThreeMinutesJournalView(viewState: $viewState,
-                                              journalText: $journalText)
+                                              journalText: $journalText,
+                                              dateInfo: dateInfo)
             case .voiceRecording:
-                VoiceRecordingJournalView(viewState: $viewState,
-                                          journalText: $journalText)
+                switch viewState {
+                case .create:
+                    VoiceRecordingJournalView(dateInfo: dateInfo)
+                case .detail:
+                    VoiceRecordingDetailView(journalText: $journalText,
+                                             dateInfo: dateInfo)
+                case .edit:
+                    fatalError("말로 남기는 기록 - 수정 불가")
+                }
             case .resolution:
                 ResolutionJournalView(viewState: $viewState,
-                                      journalText: $journalText)
+                                      journalText: $journalText,
+                                      dateInfo: dateInfo)
             case .freely:
                 FreelyJournalView(viewState: $viewState,
-                                  journalText: $journalText)
+                                  journalText: $journalText,
+                                  dateInfo: dateInfo)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -68,11 +81,34 @@ public struct WriteJournalView: View {
                 .textStyle(SmallTitle(weight: .semibold))
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                // TODO: - 저장
-            } label: {
-                Text("저장")
-                    .textStyle(Paragraph(weight: .medium))
+            //
+            if viewState == .detail, journalType.isEditable {
+                Button {
+                    //
+                    viewState = .edit
+                } label: {
+                    Image(systemName: "pencil")
+                        .font(.callout)
+                }
+            } else if viewState == .create || viewState == .edit {
+                Button {
+                    // TODO: - 저장
+                    viewState = .detail
+                } label: {
+                    Image(systemName: "checkmark")
+                        .font(.callout)
+                }
+            }
+        }
+        if viewState == .detail {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    // TODO: - 삭제
+                } label: {
+                    Image(systemName: "trash")
+                        .tint(Color.red)
+                        .font(.callout)
+                }
             }
         }
     }
