@@ -8,9 +8,9 @@
 
 import SwiftUI
 
-extension TextEditor {
+public extension TextEditor {
     //
-    public func defaultCustomStyleEditor(
+    func defaultCustomStyleEditor(
         _ input: Binding<String>,
         placeholder: String
     ) -> some View {
@@ -18,7 +18,7 @@ extension TextEditor {
     }
     
     //
-    public func resolutionJournalStyleEditor(
+    func resolutionJournalStyleEditor(
         _ input: Binding<String>,
         placeholder: String
     ) -> some View {

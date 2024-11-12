@@ -9,15 +9,15 @@
 import SwiftUI
 
 // MARK: - Tuist 로 생성된 asset 을 좀 더 간편하게 사용하고자 함
-extension DesignSystemAsset {
+public extension DesignSystemAsset {
     //
-    public static var black: Color { DesignSystemAsset.customBlack.swiftUIColor }
-    public static var darkGray: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.6) }
-    public static var lightGray: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.3) }
-    public static var gray008: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.08) }
-    public static var gray006: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.06) }
+    static var black: Color { DesignSystemAsset.customBlack.swiftUIColor }
+    static var darkGray: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.6) }
+    static var lightGray: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.3) }
+    static var gray008: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.08) }
+    static var gray006: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.06) }
     //
-    public static var white: Color { DesignSystemAsset.customWhite.swiftUIColor }
+    static var white: Color { DesignSystemAsset.customWhite.swiftUIColor }
     //
-    public static var accent: Color { DesignSystemAsset.point.swiftUIColor}
+    static var accent: Color { DesignSystemAsset.point.swiftUIColor}
 }

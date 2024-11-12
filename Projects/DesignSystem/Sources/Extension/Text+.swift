@@ -9,8 +9,8 @@
 import SwiftUI
 
 // MARK: - 텍스트 스타일을 지정해주기 위한 textStyle 메서드
-extension Text {
-    public func textStyle<Style: ViewModifier>(_ style: Style) -> some View {
+public extension Text {
+    func textStyle<Style: ViewModifier>(_ style: Style) -> some View {
         ModifiedContent(content: self, modifier: style)
     }
 }
