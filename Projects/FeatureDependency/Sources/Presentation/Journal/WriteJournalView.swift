@@ -13,6 +13,7 @@ import DesignSystem
 public struct WriteJournalView: View {
     @EnvironmentObject private var tabBarState: TabBarState
     @Environment(\.dismiss) private var dismiss
+    @State private var isShowDeleteAlert: Bool = false
     @State private var journalText: String
     @State private var viewState: JournalViewState
     let journalType: JournalType
@@ -63,6 +64,13 @@ public struct WriteJournalView: View {
         .onAppear {
             tabBarState.hide()
         }
+        .customAlert(
+            isPresented: $isShowDeleteAlert,
+            title: "기록을 삭제할까요?",
+            message: "삭제 된 기록은 복구할 수 없어요!",
+            primaryButtonTitle: "삭제할래요",
+            primaryButtonAction: { }, // TODO: - 삭제
+            secondButtonTitle: "취소")
         .tint(DesignSystemAsset.black)
     }
     
@@ -104,6 +112,7 @@ public struct WriteJournalView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     // TODO: - 삭제
+                    isShowDeleteAlert = true
                 } label: {
                     Image(systemName: "trash")
                         .tint(Color.red)
