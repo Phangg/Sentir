@@ -17,6 +17,9 @@ public extension DesignSystemAsset {
     static var gray008: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.08) }
     static var gray006: Color { DesignSystemAsset.customBlack.swiftUIColor.opacity(0.06) }
     //
+    static var shuttleGray: Color { DesignSystemAsset.shuttleGrayColor.swiftUIColor }
+    static var geyser: Color { DesignSystemAsset.geyserColor.swiftUIColor }
+    //
     static var white: Color { DesignSystemAsset.customWhite.swiftUIColor }
     //
     static var accent: Color { DesignSystemAsset.point.swiftUIColor}
