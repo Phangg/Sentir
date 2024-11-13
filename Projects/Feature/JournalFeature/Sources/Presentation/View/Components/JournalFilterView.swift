@@ -45,7 +45,8 @@ struct JournalFilterView: View {
                 }
                 .padding(.vertical, ViewValues.defaultPadding)
                 //
-                Divider()
+                CustomDivider(color: DesignSystemAsset.lightGray,
+                              type: .horizontal(height: 0.3))
                 //
                 Button {
                     filterState = .oldest

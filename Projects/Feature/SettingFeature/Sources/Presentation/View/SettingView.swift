@@ -59,7 +59,8 @@ public struct SettingView: View {
                                 .fill(.clear)
                                 .frame(height: 20)
                         } else {
-                            Divider()
+                            CustomDivider(color: DesignSystemAsset.lightGray,
+                                          type: .horizontal(height: 0.3))
                         }
                     }
                 }
