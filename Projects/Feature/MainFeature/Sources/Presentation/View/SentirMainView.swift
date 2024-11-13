@@ -23,7 +23,7 @@ public struct SentirMainView: View {
             //
             NavigationStack {
                 //
-                MainContentView(safeArea: safeArea)
+                MainContentView(showDescription: $showDescription, safeArea: safeArea)
                     .safeAreaPadding(.bottom, ViewValues.bottomTabArea + ViewValues.largePadding)
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationBarBackButtonHidden()
@@ -34,15 +34,6 @@ public struct SentirMainView: View {
             }
             .onAppear {
                 updateScheme()
-            }
-            //
-            if showDescription {
-                DesignSystemAsset.darkGray.opacity(0.3)
-                    .ignoresSafeArea()
-                    .transition(.opacity)
-                    .onTapGesture {
-                        showDescription = false
-                    }
             }
         }
     }

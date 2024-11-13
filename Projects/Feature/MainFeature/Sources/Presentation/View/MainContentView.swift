@@ -11,56 +11,8 @@ import Common
 import DesignSystem
 import FeatureDependency
 
-@MainActor
-final class ScrollManager: ObservableObject {
-    @Published var currentIndex: Int = 0
-    @Published var scrollDirection: ScrollDirection = .none
-    @Published var controls: [JournalContentControl] = []
-    private let scrollInterval: TimeInterval = 0.016
-    static let scrollSpeed: CGFloat = 15
-
-    @MainActor
-    enum ScrollDirection {
-        case up
-        case down
-        case none
-        
-        var speed: CGFloat {
-            switch self {
-            case .up:
-                return -ScrollManager.scrollSpeed
-            case .down:
-                return ScrollManager.scrollSpeed
-            case .none:
-                return 0
-            }
-        }
-    }
-    
-    func updateScrollOffset(isScrollingUp: Bool) {
-        scrollDirection = isScrollingUp ? .up : .down
-    }
-    
-    func scroll(using proxy: ScrollViewProxy) {
-        switch scrollDirection {
-        case .up:
-            let targetIndex = max(0, currentIndex - 1)
-            withAnimation(.linear(duration: scrollInterval)) {
-                proxy.scrollTo(controls[targetIndex].type, anchor: .top)
-            }
-        case .down:
-            let targetIndex = min(controls.count - 1, currentIndex + 1)
-            withAnimation(.linear(duration: scrollInterval)) {
-                proxy.scrollTo(controls[targetIndex].type, anchor: .bottom)
-            }
-        case .none:
-            break
-        }
-    }
-}
-
 struct MainContentView: View {
-    @State private var controls: [JournalContentControl] = sampleControls
+    @State private var controls: [JournalContentControl] = JournalContentControl.controls
     @State private var selectedControl: JournalContentControl?
     @State private var selectedControlFrame: CGRect = .zero
     @State private var selectedControlScale: CGFloat = 1.0
@@ -69,6 +21,8 @@ struct MainContentView: View {
     @StateObject private var scrollManager = ScrollManager()
     @State private var scrollTimer: Timer?
     private let scrollInterval: TimeInterval = 0.016
+    //
+    @Binding var showDescription: Bool
     //
     var safeArea: EdgeInsets
     
@@ -217,37 +171,6 @@ struct MainContentView: View {
     private func startScrolling(proxy: ScrollViewProxy) {
         withAnimation(.linear(duration: scrollInterval).repeatForever(autoreverses: false)) {
             scrollManager.scroll(using: proxy)
-        }
-    }
-}
-
-struct ControlBoxView: View {
-    var control: JournalContentControl
-    
-    var body: some View {
-        //
-        HStack {
-            VStack(alignment: .leading, spacing: 20) {
-                //
-                Text(control.type.rawValue)
-                    .textStyle(MediumTitle(weight: .semibold))
-                    .padding(.top, ViewValues.halfPadding)
-                //
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(DesignSystemAsset.gray006)
-                    .overlay(alignment: .center) {
-                        Image(systemName: control.symbol)
-                            .font(.title2)
-                    }
-                    .frame(width: control.controlSize.size.width - (ViewValues.halfPadding * 2))
-            }
-            .padding(ViewValues.halfPadding)
-        }
-        .frame(width: control.controlSize.size.width,
-               height: control.controlSize.size.height)
-        .background {
-            RoundedRectangle(cornerRadius: 20)
-                .fill(DesignSystemAsset.gray008)
         }
     }
 }
