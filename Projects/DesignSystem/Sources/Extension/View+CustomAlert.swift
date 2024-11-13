@@ -15,7 +15,7 @@ public extension View {
         title: String,
         message: String? = nil,
         primaryButtonTitle: String,
-        primaryButtonColor: Color = .white,
+        primaryButtonColor: Color = DesignSystemAsset.white,
         primaryButtonAction: @escaping () -> Void,
         secondButtonTitle: String? = nil,
         secondButtonColor: Color? = nil,

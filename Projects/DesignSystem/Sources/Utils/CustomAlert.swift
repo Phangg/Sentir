@@ -30,7 +30,7 @@ public struct CustomAlert: View {
         title: String,
         message: String? = nil,
         primaryButtonTitle: String,
-        primaryButtonColor: Color = .white,
+        primaryButtonColor: Color = DesignSystemAsset.white,
         primaryButtonAction: @escaping () -> Void,
         secondButtonTitle: String? = nil,
         secondButtonColor: Color? = nil,
@@ -79,7 +79,7 @@ public struct CustomAlert: View {
                                 secondButtonAction?()
                             } label: {
                                 Capsule()
-                                    .fill(DesignSystemAsset.darkGray)
+                                    .fill(DesignSystemAsset.lightGray)
                                     .overlay {
                                         Text(secondButtonTitle)
                                             .textStyle(Paragraph(weight: .semibold,
@@ -94,7 +94,7 @@ public struct CustomAlert: View {
                             primaryButtonAction()
                         } label: {
                             Capsule()
-                                .fill(DesignSystemAsset.accent.opacity(0.9))
+                                .fill(DesignSystemAsset.black)
                                 .overlay {
                                     Text(primaryButtonTitle)
                                         .textStyle(Paragraph(weight: .semibold,
