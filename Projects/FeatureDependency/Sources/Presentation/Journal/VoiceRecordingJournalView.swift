@@ -39,7 +39,7 @@ struct VoiceRecordingJournalView: View {
                             //
                             if speechRecognizer.isRecording {
                                 Text("\(dateInfo)의 음성을 기록 중입니다")
-                                    .textStyle(Paragraph(color: DesignSystemAsset.accent))
+                                    .textStyle(Paragraph(color: DesignSystemAsset.bittersweet))
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .opacity(textOpacity)
                                     .animation(

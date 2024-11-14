@@ -20,11 +20,11 @@ public enum JournalFlag: Int {
         case .nothing:
             Color.clear
         case .low:
-            DesignSystemAsset.accent.opacity(0.1)
+            DesignSystemAsset.bittersweet.opacity(0.1)
         case .medium:
-            DesignSystemAsset.accent.opacity(0.5)
+            DesignSystemAsset.bittersweet.opacity(0.5)
         case .high:
-            DesignSystemAsset.accent
+            DesignSystemAsset.bittersweet
         }
     }
 }

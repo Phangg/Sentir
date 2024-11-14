@@ -105,11 +105,11 @@ struct WithinThreeMinutesJournalView: View {
     fileprivate var TimeProgressView: some View {
         HStack {
             Rectangle()
-                .fill(DesignSystemAsset.accent.opacity(0.3))
+                .fill(DesignSystemAsset.bittersweet.opacity(0.3))
                 .frame(width: ViewValues.width, height: 8)
                 .overlay(alignment: .leading) {
                     Rectangle()
-                        .fill(DesignSystemAsset.accent)
+                        .fill(DesignSystemAsset.bittersweet)
                         .frame(width: ViewValues.width * progress, height: 7.8)
                         .animation(.linear(duration: 0.1), value: progress)
                 }

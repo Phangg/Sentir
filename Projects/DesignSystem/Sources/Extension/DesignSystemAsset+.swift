@@ -22,5 +22,5 @@ public extension DesignSystemAsset {
     //
     static var white: Color { DesignSystemAsset.customWhite.swiftUIColor }
     //
-    static var accent: Color { DesignSystemAsset.point.swiftUIColor}
+    static var bittersweet: Color { DesignSystemAsset.bittersweetColor.swiftUIColor}
 }

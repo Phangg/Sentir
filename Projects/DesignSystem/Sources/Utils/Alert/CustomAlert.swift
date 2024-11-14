@@ -118,7 +118,7 @@ public struct CustomAlert: View {
             .animation(.spring(response: 0.3, dampingFraction: 0.75), value: zStackOffset)
         }
         .onAppear {
-            backgroundOpacity = 0.4
+            backgroundOpacity = 0.3
             zStackOffset = 0
         }
     }
