@@ -9,7 +9,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: "FeatureDependency",
+    name: "JournalHandler",
     moduleType: .dynamicFramework,
     dependencies: [
         .designSystem,

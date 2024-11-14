@@ -12,6 +12,7 @@ let project = Project.makeProject(
     name: "SettingFeature",
     moduleType: .feature,
     dependencies: [
-        .featureDependency,
+        .designSystem,
+        .common
     ]
 )

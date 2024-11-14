@@ -9,8 +9,10 @@ import ProjectDescription
 
 public extension TargetDependency {
     static let app: Self = .module(name: "App")
+    static let appFlowFeature: Self = .module(name: "AppFlowFeature")
     static let mainTabFeature: Self = .module(name: "MainTabFeature")
-    static let featureDependency: Self = .module(name: "FeatureDependency")
+    static let onboardingFeature: Self = .module(name: "OnboardingFeature")
+    static let journalHandler: Self = .module(name: "JournalHandler")
     static let common: Self = .module(name: "Common")
     static let core: Self = .module(name: "Core")
     static let data: Self = .module(name: "Data")

@@ -12,6 +12,6 @@ let project = Project.makeProject(
     name: "JournalFeature",
     moduleType: .feature,
     dependencies: [
-        .featureDependency,
+        .journalHandler,
     ]
 )
