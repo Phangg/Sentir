@@ -9,7 +9,7 @@
 import SwiftUI
 import Common
 import DesignSystem
-import FeatureDependency
+import JournalHandlerFeature
 
 public struct ListView: View {
     @State private var journalData = JournalData.sample

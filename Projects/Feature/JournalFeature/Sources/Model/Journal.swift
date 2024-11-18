@@ -8,7 +8,7 @@
 
 import Common
 import Foundation
-import FeatureDependency
+import JournalHandlerFeature
 
 // MARK: - 저장되는 데이터 모델
 public struct JournalData {

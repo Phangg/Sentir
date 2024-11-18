@@ -2,14 +2,14 @@
 //  Project.swift
 //  AppManifests
 //
-//  Created by phang on 8/28/24.
+//  Created by phang on 11/14/24.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: "SettingFeature",
+    name: "OnboardingFeature",
     moduleType: .feature,
     dependencies: [
         .featureDependency,

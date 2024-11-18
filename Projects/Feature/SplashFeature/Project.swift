@@ -12,7 +12,6 @@ let project = Project.makeProject(
     name: "SplashFeature",
     moduleType: .feature,
     dependencies: [
-        .designSystem,
-        .common
+        .featureDependency,
     ]
 )

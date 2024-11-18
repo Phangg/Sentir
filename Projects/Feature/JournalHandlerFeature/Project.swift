@@ -9,7 +9,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: "SettingFeature",
+    name: "JournalHandlerFeature",
     moduleType: .feature,
     dependencies: [
         .featureDependency,

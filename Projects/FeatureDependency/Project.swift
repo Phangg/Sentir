@@ -1,6 +1,6 @@
 //
 //  Project.swift
-//  AppManifests
+//  FeatureDependency
 //
 //  Created by phang on 8/28/24.
 //
@@ -9,9 +9,11 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: "SettingFeature",
-    moduleType: .feature,
+    name: "FeatureDependency",
+    moduleType: .dynamicFramework,
     dependencies: [
-        .featureDependency,
+        .designSystem,
+        .common,
+        .domain
     ]
 )

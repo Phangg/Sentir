@@ -1,18 +1,17 @@
 //
 //  Project.swift
-//  AppManifests
+//  FeatureDependency
 //
-//  Created by phang on 11/14/24.
+//  Created by phang on 8/28/24.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: "OnboardingFeature",
+    name: "NetworkService",
     moduleType: .dynamicFramework,
     dependencies: [
-        .designSystem,
-        .common
+        .domain
     ]
 )

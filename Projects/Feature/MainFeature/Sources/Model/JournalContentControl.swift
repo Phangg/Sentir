@@ -8,7 +8,7 @@
 
 import SwiftUI
 import Common
-import FeatureDependency
+import JournalHandlerFeature
 
 // MARK: -
 struct JournalContentControl: Identifiable, Hashable {

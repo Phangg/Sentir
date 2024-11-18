@@ -9,7 +9,7 @@
 import SwiftUI
 import Common
 import DesignSystem
-import FeatureDependency
+import JournalHandlerFeature
 
 struct MainContentView: View {
     @State private var controls: [JournalContentControl] = JournalContentControl.controls

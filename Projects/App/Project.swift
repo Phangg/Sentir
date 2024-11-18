@@ -12,6 +12,8 @@ let project = Project.makeProject(
     name: "App",
     moduleType: .app,
     dependencies: [
-        .appFlowFeature
+        .appFlowFeature,
+        .core,
+        .data
     ]
 )
