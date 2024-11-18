@@ -6,18 +6,17 @@
 //  Copyright © 2024 Sentir. All rights reserved.
 //
 
-import Common
-import MainTabFeature
 import SwiftUI
+
+import AppFlowFeature
 
 @main
 struct SentirApp: App {
-    @ObservedObject private var tabBarState = TabBarState.shared
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     var body: some Scene {
         WindowGroup {
-            MainTabView()
-                .environmentObject(tabBarState)
+            AppFlowView()
         }
     }
 }
