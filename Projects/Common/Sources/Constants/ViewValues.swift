@@ -2,8 +2,8 @@
 //  ViewValues.swift
 //  Common
 //
-//  Created by phang on 8/28/24.
-//  Copyright © 2024 Sentir. All rights reserved.
+//  Created by phang on 11/19/24.
+//  Copyright © 2024 Phang. All rights reserved.
 //
 
 import SwiftUI
@@ -36,5 +36,5 @@ public struct ViewValues {
                                          height: width - (defaultPadding * 2))
     //
     public static let cardSize = CGSize(width: width - (defaultPadding * 2),
-                                        height: height / 4)    
+                                        height: height / 4)
 }

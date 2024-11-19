@@ -39,7 +39,9 @@ public struct AppFlowView: View {
                     intent?.finishSplash()
                 })
             case .onboarding:
-                OnboardingView()
+                OnboardingView { [weak intent] in
+                    intent?.completeOnboarding()
+                }
             case .main:
                 MainTabView()
                     .environmentObject(tabBarState)

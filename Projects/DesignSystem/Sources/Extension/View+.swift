@@ -1,5 +1,5 @@
 //
-//  View+CustomAlert.swift
+//  View+.swift
 //  DesignSystem
 //
 //  Created by phang on 11/12/24.
@@ -8,9 +8,23 @@
 
 import SwiftUI
 
-public extension View {
+extension View {
+    
+    // MARK: - 투명 배경 Full Screen Cover
+    public  func transparentFullScreenCover<Content: View>(
+        isPresented: Binding<Bool>,
+        content: @escaping () -> Content
+    ) -> some View {
+        fullScreenCover(isPresented: isPresented) {
+            ZStack {
+                content()
+            }
+            .background(TransparentBackground())
+        }
+    }
+    
     // MARK: - CustomAlert 를 사용하기 위함
-    func customAlert(
+    public func customAlert(
         isPresented: Binding<Bool>,
         title: String,
         message: String? = nil,

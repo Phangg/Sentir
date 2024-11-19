@@ -31,7 +31,7 @@ extension SplashIntentImp: SplashIntent {
         
         // TODO: - 실제 fetch 과정으로 수정 필요
         print("데이터 받아오는 중...")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.model?.finishSplashFetch()
         }
     }
