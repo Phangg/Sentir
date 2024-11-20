@@ -12,23 +12,11 @@ import Foundation
 protocol OnboardingModelState {
     var currentPageType: OnboardingPageType { get }
     var progress: CGFloat { get }
-    var timer: Timer? { get }
-    var isTimerPaused: Bool { get }
 }
 
 // MARK: - Action
 protocol OnboardingModelAction: AnyObject {
-    //
     func moveToPage(_ targetViewType: OnboardingPageType)
-    func getNextPage()
-    func completeFirstOnboarding()
-    //
-    func resetTimer()
-    func startTimer()
-    func stopTimer()
-    //
-    func pauseTimer()
-    func resumeTimer()
-    //
-    func hapticImpact()
+    func updateProgress(_ progress: CGFloat)
+    func resetProgress()
 }

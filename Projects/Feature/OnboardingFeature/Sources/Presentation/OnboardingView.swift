@@ -19,14 +19,18 @@ public struct OnboardingView: View {
     private var state: OnboardingModelState { container.model }
     //
     public var finishOnboardingPublisher: AnyPublisher<Void, Never> {
-        (container.model as! OnboardingModelImp).finishOnboardingPublisher
+        (container.intent).finishOnboardingPublisher
     }
     
     public init(
-        onFinishOnboarding: @escaping () -> Void
+        finishOnboarding: @escaping () -> Void,
+        configuration: OnboardingConfiguration = .default
     ) {
         let model = OnboardingModelImp()
-        let intent = OnboardingIntentImp(model: model)
+        let intent = OnboardingIntentImp(
+            model: model,
+            configuration: configuration
+        )
         let container = MVIContainer(
             intent: intent as OnboardingIntent,
             model: model as OnboardingModelState,
@@ -34,18 +38,24 @@ public struct OnboardingView: View {
         )
         self._container = StateObject(wrappedValue: container)
         //
-        model.finishOnboardingPublisher
+        intent.finishOnboardingPublisher
             .receive(on: RunLoop.main)
-            .sink(receiveValue: onFinishOnboarding)
-            .store(in: &model.cancellables)
+            .sink { [weak intent] _ in
+                intent?.cleanUp()
+                finishOnboarding()
+            }
+            .store(in: &intent.cancellables)
     }
 
     public var body: some View {
         VStack(alignment: .center, spacing: ViewValues.halfPadding) {
-            //
-            CustomToolBar()
-            //
-            CustomTabIndicator()
+            Group {
+                //
+                CustomToolBar()
+                //
+                CustomTabIndicator()
+            }
+            .padding(.horizontal, ViewValues.defaultPadding)
             //
             TabView(selection: Binding(
                 get: { state.currentPageType },
@@ -61,11 +71,10 @@ public struct OnboardingView: View {
                 OnboardingPageView(.c)
                     .tag(OnboardingPageType.c)
             }
-            .animation(.easeInOut(duration: 0.25), value: state.currentPageType)
+            .animation(.easeInOut(duration: 0.2), value: state.currentPageType)
             .tabViewStyle(.page(indexDisplayMode: .never))
             .tint(DesignSystemAsset.black)
         }
-        .padding(.horizontal, ViewValues.defaultPadding)
         .onAppear {
             intent.viewOnAppear()
         }
@@ -95,20 +104,21 @@ public struct OnboardingView: View {
         //
         HStack(alignment: .center, spacing: ViewValues.halfPadding) {
             ForEach(OnboardingPageType.allCases, id: \.self) { type in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(DesignSystemAsset.geyser)
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(type == state.currentPageType ? DesignSystemAsset.shuttleGray : .clear)
-                        .frame(width: type == state.currentPageType ? (indicatorFrameWidth / 2) * state.progress : 0)
-                }
-                .frame(width: type == state.currentPageType ? indicatorFrameWidth / 2 : 20 ,
-                       height: 20,
-                       alignment: .center)
-                .animation(.easeInOut(duration: 0.25), value: state.currentPageType)
-                .onTapGesture {
-                    intent.moveToPage(by: .indicatorTap, type)
-                }
+                Rectangle()
+                    .fill(DesignSystemAsset.geyser)
+                    .overlay(alignment: .leading) {
+                        Rectangle()
+                            .fill(type == state.currentPageType ? DesignSystemAsset.shuttleGray : .clear)
+                            .frame(width: type == state.currentPageType ? (indicatorFrameWidth / 2) * state.progress : 0)
+                    }
+                    .frame(width: type == state.currentPageType ? indicatorFrameWidth / 2 : 10,
+                           height: 10,
+                           alignment: .center)
+                    .clipShape(.rect(cornerRadius: 10))
+                    .animation(.easeInOut(duration: 0.2), value: state.currentPageType)
+                    .onTapGesture {
+                        intent.moveToPage(by: .indicatorTap, type)
+                    }
             }
         }
         .frame(width: indicatorFrameWidth, height: 30)
@@ -126,13 +136,14 @@ public struct OnboardingView: View {
             Text(type.description)
                 .textStyle(SmallTitle(weight: .semibold))
         }
+        .padding(.horizontal, ViewValues.defaultPadding)
         .simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
-                    intent.handleLongPressStart()
+                    intent.pauseTimer()
                 }
                 .onEnded { _ in
-                    intent.handleLongPressEnd()
+                    intent.resumeTimer()
                 }
         )
     }

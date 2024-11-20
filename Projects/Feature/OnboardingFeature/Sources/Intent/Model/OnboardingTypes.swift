@@ -1,5 +1,5 @@
 //
-//  OnboardingButtonAndView.swift
+//  OnboardingTypes.swift
 //  OnboardingFeature
 //
 //  Created by phang on 11/18/24.

@@ -6,11 +6,18 @@
 //  Copyright © 2024 Phang. All rights reserved.
 //
 
+import Combine
+import Foundation
+
+@MainActor
 protocol OnboardingIntent: AnyObject {
+    //
+    var finishOnboardingPublisher: AnyPublisher<Void, Never> { get }
+    //
     func viewOnAppear()
     func viewOnDisappear()
     func moveToPage(by action: OnboardingPagingType, _ targetViewType: OnboardingPageType)
     func finishOnboarding()
-    func handleLongPressStart()
-    func handleLongPressEnd()
+    func pauseTimer()
+    func resumeTimer()
 }
