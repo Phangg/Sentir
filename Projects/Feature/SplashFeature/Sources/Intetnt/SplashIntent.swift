@@ -6,6 +6,12 @@
 //  Copyright © 2024 Phang. All rights reserved.
 //
 
+import Combine
+
+@MainActor
 protocol SplashIntent: AnyObject {
+    //
+    var finishSplashPublisher: AnyPublisher<Void, Never> { get }
+    //
     func viewOnAppear()
 }
