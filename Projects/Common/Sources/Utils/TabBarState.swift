@@ -8,7 +8,17 @@
 
 import SwiftUI
 
-public final class TabBarState: ObservableObject {
+// MARK: -
+public protocol TabBarStateManageable {
+    //
+    var isHidden: Bool { get }
+    //
+    func hide()
+    func show()
+}
+
+// MARK: -
+public final class TabBarState: ObservableObject, TabBarStateManageable {
     public static let shared = TabBarState()
 
     @Published public var isHidden: Bool = false

@@ -10,36 +10,44 @@ import SwiftUI
 import Common
 import DesignSystem
 
-public struct FloatingTabBar: View {
+struct FloatingTabBar: View {
+    //
     @Namespace private var animation
-    @Binding var tabSelection: Tab
+    //
+    @ObservedObject private var adapter: FloatingTabBarAdapter
+    //
+    private let activeForegroundColor: Color = DesignSystemAsset.white
+    private let activeBackgroundColor: Color = DesignSystemAsset.lightGray
+    private let tabBarHeight: CGFloat = 55
+    private let tabItemWidth: CGFloat = 60
+    private let tabItemHeight: CGFloat = 40
     
-    private var activeForegroundColor: Color = DesignSystemAsset.white
-    private var activeBackgroundColor: Color = DesignSystemAsset.lightGray
-    
-    public init(tabSelection: Binding<Tab>) {
-        self._tabSelection = tabSelection
+    //
+    public init(
+        adapter: FloatingTabBarAdapter
+    ) {
+        self._adapter = ObservedObject(wrappedValue: adapter)
     }
     
     public var body: some View {
         HStack(spacing: 0) {
-            ForEach(Tab.allCases, id: \.rawValue) { tab in
+            ForEach(TabType.allCases, id: \.self) { tab in
                 Button {
-                    tabSelection = tab
+                    adapter.intent.changeTab(to: tab)
                 } label: {
                     HStack(spacing: 5) {
-                        Image(systemName: tab.rawValue)
-                            .scaleEffect(tabSelection == tab ? 1.1 : 0.9)
+                        Image(systemName: tab.image)
+                            .scaleEffect(adapter.state.currentTab == tab ? 1.1 : 0.9)
                             .font(.title2)
                             .fontWeight(.medium)
-                            .frame(width: 60, height: 40)
+                            .frame(width: tabItemWidth, height: tabItemHeight)
                     }
-                    .foregroundStyle(tabSelection == tab ? activeForegroundColor : DesignSystemAsset.darkGray)
+                    .foregroundStyle(adapter.state.currentTab == tab ? activeForegroundColor : DesignSystemAsset.darkGray)
                     .padding(.vertical, ViewValues.tinyPadding)
                     .padding(.horizontal, ViewValues.mediumPadding)
                     .contentShape(.rect)
                     .background {
-                        if tabSelection == tab {
+                        if adapter.state.currentTab == tab {
                             Capsule()
                                 .fill(activeBackgroundColor.gradient)
                                 .matchedGeometryEffect(id: "TABSELECTION", in: animation)
@@ -48,19 +56,19 @@ public struct FloatingTabBar: View {
                 }
                 .buttonStyle(.plain)
                 
-                if tab != Tab.allCases.last {
+                if tab != TabType.allCases.last {
                     Spacer()
                 }
             }
         }
         .padding(.horizontal, ViewValues.halfPadding)
-        .frame(height: 55)
+        .frame(height: tabBarHeight)
         .background(
             .background
                 .shadow(.drop(color: DesignSystemAsset.gray008, radius: 5, x: 5, y: 5))
                 .shadow(.drop(color: DesignSystemAsset.gray006, radius: 5, x: -5, y: -5)),
             in: .capsule
         )
-        .animation(.smooth(duration: 0.3, extraBounce: 0), value: tabSelection)
+        .animation(.smooth(duration: 0.3, extraBounce: 0), value: adapter.state.currentTab)
     }
 }
