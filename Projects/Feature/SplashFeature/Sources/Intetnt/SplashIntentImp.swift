@@ -7,15 +7,16 @@
 //
 
 import SwiftUI
+import Combine
 
-class SplashIntentImp {
-    // Model
+@MainActor
+final class SplashIntentImp {
+    //
     private weak var model: SplashModelAction?
-    // Dependencies
+    // Combine
+    private let finishSplashSubject = PassthroughSubject<Void, Never>()
+    var cancellables = Set<AnyCancellable>()
 
-    // Business Data
-
-    
     //
     init(
         model: SplashModelAction
@@ -26,6 +27,11 @@ class SplashIntentImp {
 
 extension SplashIntentImp: SplashIntent {
     //
+    var finishSplashPublisher: AnyPublisher<Void, Never> {
+        finishSplashSubject.eraseToAnyPublisher()
+    }
+    
+    //
     func viewOnAppear() {
         model?.displayLoading()
         
@@ -33,6 +39,7 @@ extension SplashIntentImp: SplashIntent {
         print("데이터 받아오는 중...")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.model?.finishSplashFetch()
+            self?.finishSplashSubject.send()
         }
     }
 }

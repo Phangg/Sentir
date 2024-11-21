@@ -17,7 +17,7 @@ public struct SplashView: View {
     private var state: SplashModelState { container.model }
     //
     public var finishSplashPublisher: AnyPublisher<Void, Never> {
-        (container.model as! SplashModelImp).finishSplashPublisher
+        (container.intent).finishSplashPublisher
     }
     
     public init(
@@ -32,10 +32,10 @@ public struct SplashView: View {
         )
         self._container = StateObject(wrappedValue: container)
         //
-        model.finishSplashPublisher
+        intent.finishSplashPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: onFinishSplash)
-            .store(in: &model.cancellables)
+            .store(in: &intent.cancellables)
     }
     
     public var body: some View {

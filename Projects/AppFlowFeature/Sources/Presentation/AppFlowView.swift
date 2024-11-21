@@ -21,7 +21,7 @@ public struct AppFlowView: View {
     private var state: AppFlowModelState { container.model }
     
     public init() {
-        let model = AppFlowModelImp(hasCompletedOnboarding: false)
+        let model = AppFlowModelImp()
         let intent = AppFlowIntentImp(model: model)
         let container = MVIContainer(
             intent: intent as AppFlowIntent,

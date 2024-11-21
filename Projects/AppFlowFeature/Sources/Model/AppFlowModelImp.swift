@@ -14,17 +14,17 @@ import Data
 public final class AppFlowModelImp: ObservableObject, AppFlowModelState {
     //
     @Published var currentFlow: AppFlow = .splash
-    @Published var hasCompletedOnboarding: Bool
+    var hasCompletedOnboarding: Bool
     //
     private let storage: StorageType
     private let onboardingKey = "hasCompletedOnboarding"
     
     //
     init(
-        hasCompletedOnboarding: Bool,
+        hasCompletedOnboarding: Bool = false,
         storage: StorageType = UserDefaults.standard
     ) {
-        self.hasCompletedOnboarding = storage.getValue(forKey: onboardingKey) ?? false
+        self.hasCompletedOnboarding = storage.getValue(forKey: onboardingKey) ?? hasCompletedOnboarding
         self.storage = storage
     }
 }

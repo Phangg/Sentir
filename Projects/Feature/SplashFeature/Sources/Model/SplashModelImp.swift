@@ -7,17 +7,10 @@
 //
 
 import Foundation
-import Combine
 
 public final class SplashModelImp: ObservableObject, SplashModelState {
     //
     @Published var isLoading: Bool
-    // combine
-    private let finishSplashSubject = PassthroughSubject<Void, Never>()
-    var finishSplashPublisher: AnyPublisher<Void, Never> {
-        finishSplashSubject.eraseToAnyPublisher()
-    }
-    var cancellables = Set<AnyCancellable>()
 
     //
     init(
@@ -31,7 +24,6 @@ extension SplashModelImp: SplashModelAction {
     func finishSplashFetch() {
         print("Splash - fetch 완료")
         isLoading = false
-        finishSplashSubject.send()
     }
     
     func displayLoading() {
