@@ -7,13 +7,13 @@
 //
 
 import SwiftUI
-import Combine
-import Common
 
 final class OnboardingModelImp: ObservableObject, OnboardingModelState {
+    //
     @Published private(set) var currentPageType: OnboardingPageType
     @Published private(set) var progress: CGFloat
     
+    //
     init(
         currentPageType: OnboardingPageType = .a,
         progress: CGFloat = 0

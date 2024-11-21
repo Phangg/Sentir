@@ -113,6 +113,7 @@ final class OnboardingIntentImp {
 }
 
 extension OnboardingIntentImp: OnboardingIntent {
+    //
     var finishOnboardingPublisher: AnyPublisher<Void, Never> {
         finishOnboardingSubject.eraseToAnyPublisher()
     }
