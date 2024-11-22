@@ -7,11 +7,24 @@
 //
 
 // MARK: -
-public enum JournalType: String, Hashable {
-    case withinThreeMinutes = "3분의 순간"
-    case voiceRecording = "말로 남기는 기록"
-    case resolution = "오늘을 위한 다짐"
-    case freely = "마음 가는 대로"
+public enum JournalType: Hashable {
+    case withinThreeMinutes
+    case voiceRecording
+    case resolution
+    case freely
+    
+    public var title: String {
+        switch self {
+        case .withinThreeMinutes:
+            "3분의 순간"
+        case .voiceRecording:
+            "말로 남기는 기록"
+        case .resolution:
+            "오늘을 위한 다짐"
+        case .freely:
+            "마음 가는 대로"
+        }
+    }
     
     public var description: String {
         switch self {

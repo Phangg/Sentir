@@ -9,6 +9,6 @@
 import Foundation
 
 @MainActor
-protocol FloatingTabBarIntent {
+protocol FloatingTabBarIntent: AnyObject {
     func changeTab(to tab: TabType)
 }

@@ -12,10 +12,10 @@ import SwiftUI
 
 @MainActor
 public class SpeechRecognizer: ObservableObject {
-    @Published public var transcript: String = ""
-    @Published public var showPermissionAlert = false
+    @Published public private(set) var transcript: String = ""
     @Published public private(set) var isRecording = false
-    @Published public var isFinishCheckPermissions = false
+    @Published public private(set) var isFinishCheckPermissions = false
+    @Published public var showPermissionAlert = false
 
     private var audioEngine: AVAudioEngine?
     private var request: SFSpeechAudioBufferRecognitionRequest?

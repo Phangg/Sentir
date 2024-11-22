@@ -21,7 +21,7 @@ public protocol TabBarStateManageable {
 public final class TabBarState: ObservableObject, TabBarStateManageable {
     public static let shared = TabBarState()
 
-    @Published public var isHidden: Bool = false
+    @Published public private(set) var isHidden: Bool = false
     
     private init() { }
     

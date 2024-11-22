@@ -13,7 +13,7 @@ import Data
 
 public final class AppFlowModelImp: ObservableObject, AppFlowModelState {
     //
-    @Published var currentFlow: AppFlow = .splash
+    @Published private(set) var currentFlow: AppFlow = .splash
     var hasCompletedOnboarding: Bool
     //
     private let storage: StorageType

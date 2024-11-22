@@ -7,6 +7,6 @@
 //
 
 // MARK: - State
-protocol FloatingTabBarModelState {
+protocol FloatingTabBarModelState: AnyObject {
     var currentTab: TabType { get }
 }

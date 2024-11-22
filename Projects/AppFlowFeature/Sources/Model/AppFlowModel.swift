@@ -14,7 +14,7 @@ public enum AppFlow: Equatable {
 }
 
 // MARK: - State
-protocol AppFlowModelState {
+protocol AppFlowModelState: AnyObject {
     var currentFlow: AppFlow { get }
     var hasCompletedOnboarding: Bool { get }
 }

@@ -10,7 +10,7 @@ import Foundation
 
 public final class SplashModelImp: ObservableObject, SplashModelState {
     //
-    @Published var isLoading: Bool
+    @Published private(set) var isLoading: Bool
 
     //
     init(

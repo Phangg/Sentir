@@ -12,8 +12,8 @@ import Common
 
 public final class MainTabModelImp: ObservableObject, MainTabModelState {
     //
-    @Published var currentTab: TabType
-    @Published var isDefaultTabBarHidden: Bool
+    @Published private(set) var currentTab: TabType
+    @Published private(set) var isDefaultTabBarHidden: Bool
     //
     private let tabBarStateManager: TabBarStateManageable
     var tabBarState: TabBarStateManageable { tabBarStateManager }

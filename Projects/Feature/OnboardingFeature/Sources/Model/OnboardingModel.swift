@@ -9,7 +9,7 @@
 import Foundation
 
 // MARK: - State
-protocol OnboardingModelState {
+protocol OnboardingModelState: AnyObject {
     var currentPageType: OnboardingPageType { get }
     var progress: CGFloat { get }
 }

@@ -7,7 +7,7 @@
 //
 
 // MARK: - State
-protocol SplashModelState {
+protocol SplashModelState: AnyObject {
     var isLoading: Bool { get }
 }
 

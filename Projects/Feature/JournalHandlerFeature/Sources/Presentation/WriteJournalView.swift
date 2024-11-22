@@ -85,7 +85,7 @@ public struct WriteJournalView: View {
         }
         ToolbarItem(placement: .principal) {
             //
-            Text(journalType.rawValue)
+            Text(journalType.title)
                 .textStyle(SmallTitle(weight: .semibold))
         }
         ToolbarItem(placement: .topBarTrailing) {

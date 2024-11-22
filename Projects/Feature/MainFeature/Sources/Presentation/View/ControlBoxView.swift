@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+
 import Common
 import DesignSystem
 
@@ -18,7 +19,7 @@ struct ControlBoxView: View {
         HStack {
             VStack(alignment: .leading, spacing: 20) {
                 //
-                Text(control.type.rawValue)
+                Text(control.type.title)
                     .textStyle(MediumTitle(weight: .bold,
                                            color: DesignSystemAsset.shuttleGray))
                 //
