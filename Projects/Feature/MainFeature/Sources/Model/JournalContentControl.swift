@@ -24,3 +24,18 @@ struct JournalContentControl: Identifiable, Hashable {
         .init(type: .freely)
     ]
 }
+
+// MARK: -
+enum JournalContentControlScaleType {
+    case `default`
+    case selected
+    
+    var value: CGFloat {
+        switch self {
+        case .default:
+            1.0
+        case .selected:
+            1.05
+        }
+    }
+}
