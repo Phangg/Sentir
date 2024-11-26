@@ -47,5 +47,8 @@ public struct AppFlowView: View {
                     .environmentObject(tabBarState)
             }
         }
+        .onChange(of: intent.appScheme) { _, newScheme in
+            intent.updateScheme(newScheme)
+        }
     }
 }

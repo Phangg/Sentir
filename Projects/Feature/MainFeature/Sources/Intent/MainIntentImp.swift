@@ -20,12 +20,7 @@ final class MainIntentImp {
     //
     private let hapticManager: HapticManager
     private let scrollService: MainViewScrollService
-    //
-    @Injected(AppSchemeUseCase.self)
-    private var appSchemeUseCase: AppSchemeUseCase
-    @Injected(AppSchemeUpdateService.self)
-    private var appSchemeUpdateService: AppSchemeUpdateService
-    
+
     //
     init(
         model: MainModelAction,
@@ -39,16 +34,6 @@ final class MainIntentImp {
 }
 
 extension MainIntentImp: MainIntent {
-    var appScheme: AppScheme {
-        appSchemeUseCase.currentScheme
-    }
-    
-    //
-    func updateScheme(_ scheme: AppScheme) {
-        appSchemeUseCase.updateScheme(scheme)
-        appSchemeUpdateService.updateAppearance(scheme)
-    }
-    
     func tabQuestionmarkButton() {
         //
     }

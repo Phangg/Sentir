@@ -8,13 +8,19 @@
 
 import SwiftUI
 
+import Common
+import Core
+import Domain
 import SplashFeature
 
 class AppFlowIntentImp {
     // Model
     private weak var model: AppFlowModelAction?
     // Dependencies
-    
+    @Injected(AppSchemeUseCase.self)
+    private var appSchemeUseCase: AppSchemeUseCase
+    @Injected(AppSchemeUpdateService.self)
+    private var appSchemeUpdateService: AppSchemeUpdateService
     // Business Data
 
     
@@ -28,11 +34,20 @@ class AppFlowIntentImp {
 
 extension AppFlowIntentImp: AppFlowIntent {
     //
+    var appScheme: Common.AppScheme {
+        appSchemeUseCase.currentScheme
+    }
+    
+    //
+    func updateScheme(_ scheme: Common.AppScheme) {
+        appSchemeUseCase.updateScheme(scheme)
+        appSchemeUpdateService.updateAppearance(scheme)
+    }
+    
     func finishSplash() {
         model?.finishSplash()
     }
     
-    //
     func completeOnboarding() {
         model?.completeFirstOnboarding()
     }

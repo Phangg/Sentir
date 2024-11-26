@@ -48,9 +48,6 @@ public struct SentirMainView: View {
                     .navigationBarBackButtonHidden()
                     .toolbar { mainViewToolbarContent() }
             }
-            .onChange(of: intent.appScheme) { _, newScheme in
-                intent.updateScheme(newScheme)
-            }
         }
     }
 }

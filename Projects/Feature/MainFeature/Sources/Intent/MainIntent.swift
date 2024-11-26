@@ -12,10 +12,6 @@ import Common
 
 @MainActor
 protocol MainIntent {
-    //
-    var appScheme: AppScheme { get }
-    //
-    func updateScheme(_ scheme: AppScheme)
     func tabQuestionmarkButton()
     func handleControlBoxGeoChange(
         control: JournalContentControl,
