@@ -13,7 +13,6 @@ let project = Project.makeProject(
     moduleType: .app,
     dependencies: [
         .appFlowFeature,
-        .core,
         .data
     ]
 )

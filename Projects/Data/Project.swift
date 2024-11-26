@@ -12,6 +12,7 @@ let project = Project.makeProject(
     name: "Data",
     moduleType: .dynamicFramework,
     dependencies: [
-        .networkService
+        .networkService,
+        .core
     ]
 )
