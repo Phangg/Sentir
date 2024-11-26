@@ -11,13 +11,11 @@ import SwiftUI
 import Core
 import Common
 import DesignSystem
+import Domain
 import JournalHandlerFeature
 
 // MARK: - View
 public struct SentirMainView: View {
-    //
-    @AppStorage("AppScheme") private var appScheme: AppScheme = .device
-    @Environment(\.colorScheme) private var colorScheme
     //
     @StateObject var container: MVIContainer<MainIntent, MainModelState>
     private var intent: MainIntent { container.intent }
@@ -50,13 +48,8 @@ public struct SentirMainView: View {
                     .navigationBarBackButtonHidden()
                     .toolbar { mainViewToolbarContent() }
             }
-            .onChange(of: appScheme) { _, _ in
-                updateScheme()
-                // schemeChange
-            }
-            .onAppear {
-                updateScheme()
-                // viewOnAppear
+            .onChange(of: intent.appScheme) { _, newScheme in
+                intent.updateScheme(newScheme)
             }
         }
     }
@@ -182,11 +175,5 @@ extension SentirMainView {
                 intent.handleDragEnded()
                 intent.clearSelectedControl()
             }
-    }
-    
-    private func updateScheme() {
-        if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow {
-            window.overrideUserInterfaceStyle = appScheme == .dark ? .dark : appScheme == .light ? .light : .unspecified
-        }
     }
 }

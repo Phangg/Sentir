@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+import Common
+
 // MARK: - State
 protocol MainModelState: AnyObject {
     var controls: [JournalContentControl] { get }
@@ -19,8 +21,6 @@ protocol MainModelState: AnyObject {
 
 // MARK: - Action
 protocol MainModelAction: AnyObject {
-    //
-    func updateScheme()
     //
     func controlBoxGeoChange(
         control: JournalContentControl,

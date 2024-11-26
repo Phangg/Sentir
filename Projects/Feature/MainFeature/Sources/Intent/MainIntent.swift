@@ -8,13 +8,15 @@
 
 import SwiftUI
 
+import Common
+
 @MainActor
 protocol MainIntent {
     //
-    func viewOnAppear()
-    func schemeChange()
-    func tabQuestionmarkButton()
+    var appScheme: AppScheme { get }
     //
+    func updateScheme(_ scheme: AppScheme)
+    func tabQuestionmarkButton()
     func handleControlBoxGeoChange(
         control: JournalContentControl,
         newFrame: CGRect,
@@ -30,7 +32,6 @@ protocol MainIntent {
         offset: CGSize
     )
     func handleDragEnded()
-    //
     func checkAndSwapItems(location: CGPoint)
     func updateDragOffset(_ offset: CGSize)
     func clearSelectedControl()

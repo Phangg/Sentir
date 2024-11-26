@@ -10,6 +10,8 @@ import Combine
 import SwiftUI
 
 import Common
+import Core
+import Domain
 
 @MainActor
 final class MainIntentImp {
@@ -18,7 +20,12 @@ final class MainIntentImp {
     //
     private let hapticManager: HapticManager
     private let scrollService: MainViewScrollService
-
+    //
+    @Injected(AppSchemeUseCase.self)
+    private var appSchemeUseCase: AppSchemeUseCase
+    @Injected(AppSchemeUpdateService.self)
+    private var appSchemeUpdateService: AppSchemeUpdateService
+    
     //
     init(
         model: MainModelAction,
@@ -32,20 +39,20 @@ final class MainIntentImp {
 }
 
 extension MainIntentImp: MainIntent {
-    //
-    func viewOnAppear() {
-        model?.updateScheme()
+    var appScheme: AppScheme {
+        appSchemeUseCase.currentScheme
     }
     
-    func schemeChange() {
-        model?.updateScheme()
+    //
+    func updateScheme(_ scheme: AppScheme) {
+        appSchemeUseCase.updateScheme(scheme)
+        appSchemeUpdateService.updateAppearance(scheme)
     }
     
     func tabQuestionmarkButton() {
         //
     }
     
-    //
     func handleControlBoxGeoChange(
         control: JournalContentControl,
         newFrame: CGRect,
@@ -93,7 +100,6 @@ extension MainIntentImp: MainIntent {
         model?.controlDragEnd()
     }
     
-    //
     func checkAndSwapItems(location: CGPoint) {
         model?.checkAndSwapItems(location: location)
     }

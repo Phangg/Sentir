@@ -9,6 +9,8 @@
 import Combine
 import SwiftUI
 
+import Common
+
 final class MainModelImp: ObservableObject, MainModelState {
     //
     @Published private(set) var controls: [JournalContentControl]
@@ -35,10 +37,7 @@ final class MainModelImp: ObservableObject, MainModelState {
 }
 
 extension MainModelImp: MainModelAction {
-    func updateScheme() {
-        //
-    }
-    
+    //
     func controlBoxGeoChange(
         control: JournalContentControl,
         newFrame: CGRect,
