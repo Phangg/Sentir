@@ -34,12 +34,12 @@ class AppFlowIntentImp {
 
 extension AppFlowIntentImp: AppFlowIntent {
     //
-    var appScheme: Common.AppScheme {
+    var appScheme: AppScheme {
         appSchemeUseCase.currentScheme
     }
     
     //
-    func updateScheme(_ scheme: Common.AppScheme) {
+    func updateScheme(_ scheme: AppScheme) {
         appSchemeUseCase.updateScheme(scheme)
         appSchemeUpdateService.updateAppearance(scheme)
     }

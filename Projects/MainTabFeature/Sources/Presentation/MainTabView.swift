@@ -68,7 +68,7 @@ public struct MainTabView: View {
                 }
             }
             // 실제로 사용되는 TabBar
-            if !state.tabBarState.isHidden {
+            if !intent.tabBarState.isHidden {
                 FloatingTabBar(
                     adapter: FloatingTabBarAdapter(intent: intent, state: state)
                 )

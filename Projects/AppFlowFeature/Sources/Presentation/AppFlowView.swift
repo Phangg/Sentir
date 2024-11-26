@@ -16,7 +16,6 @@ import SplashFeature
 
 public struct AppFlowView: View {
     @StateObject var container: MVIContainer<AppFlowIntent, AppFlowModelState>
-    @StateObject private var tabBarState = TabBarState.shared
     private var intent: AppFlowIntent { container.intent }
     private var state: AppFlowModelState { container.model }
     
@@ -44,7 +43,6 @@ public struct AppFlowView: View {
                 }
             case .main:
                 MainTabView()
-                    .environmentObject(tabBarState)
             }
         }
         .onChange(of: intent.appScheme) { _, newScheme in

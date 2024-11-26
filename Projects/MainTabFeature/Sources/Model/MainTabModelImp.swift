@@ -14,19 +14,14 @@ public final class MainTabModelImp: ObservableObject, MainTabModelState {
     //
     @Published private(set) var currentTab: TabType
     @Published private(set) var isDefaultTabBarHidden: Bool
-    //
-    private let tabBarStateManager: TabBarStateManageable
-    var tabBarState: TabBarStateManageable { tabBarStateManager }
     
     //
     init(
         currentTab: TabType = .main,
-        isDefaultTabBarHidden: Bool = false,
-        tabBarStateManager: TabBarStateManageable = TabBarState.shared
+        isDefaultTabBarHidden: Bool = false
     ) {
         self.currentTab = currentTab
         self.isDefaultTabBarHidden = isDefaultTabBarHidden
-        self.tabBarStateManager = tabBarStateManager
     }
 }
 

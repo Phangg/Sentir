@@ -25,5 +25,10 @@ extension AppDelegate {
         container.register(type: AppSchemeUpdateService.self) { _ in
             AppSchemeUpdateServiceImp()
         }
+        
+        // TabBar State
+        container.register(type: TabBarStateManageable.self) { _ in
+            TabBarState()
+        }
     }
 }

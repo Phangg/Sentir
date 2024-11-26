@@ -12,7 +12,6 @@ import Common
 protocol MainTabModelState: AnyObject {
     var currentTab: TabType { get }
     var isDefaultTabBarHidden: Bool { get }
-    var tabBarState: TabBarStateManageable { get }
 }
 
 // MARK: - Action

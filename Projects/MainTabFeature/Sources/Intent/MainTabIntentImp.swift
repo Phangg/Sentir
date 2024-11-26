@@ -8,10 +8,16 @@
 
 import Foundation
 
+import Common
+import Core
+
 @MainActor
 final class MainTabIntentImp {
     //
     private let model: MainTabModelAction?
+    //
+    @Injected(TabBarStateManageable.self)
+    var tabBarState: TabBarStateManageable
     
     init(
         model: MainTabModelAction
