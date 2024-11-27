@@ -7,39 +7,57 @@
 //
 
 import SwiftUI
+
 import Common
+import Core
 import DesignSystem
 
-enum PasswordSheetState: Hashable {
-    case firstSet
-    case recheck
-}
-
 struct PasswordSheetView: View {
-    @State private var password: String = ""
-    @State private var passwordRecheck: String = ""
-    @State private var passwordSheetState: PasswordSheetState = .firstSet
-    @State private var incorrectPassword = false
-    @Binding var showPasswordSheetView: Bool
+    //
+    @StateObject var container: MVIContainer<PasswordIntent, PasswordModelState>
+    private var intent: PasswordIntent { container.intent }
+    private var state: PasswordModelState { container.model }
 
-    private let maxPasswordLength: Int = 4
-    let onComplete: () -> Void
-
+    //
+    init(
+        finishSetPasswordCompletion: @escaping () -> Void
+    ) {
+        let model = PasswordModelImp()
+        let intent = PasswordIntentImp(
+            model: model,
+            finishSetPasswordCompletion: finishSetPasswordCompletion
+        )
+        let container = MVIContainer(
+            intent: intent as PasswordIntent,
+            model: model as PasswordModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
+    }
+    
+    
     var body: some View {
         GeometryReader { geo in
             //
             VStack {
-                switch passwordSheetState {
+                switch state.passwordSheetState {
                 case .firstSet:
                     PasswordView(size: geo.size)
                 case .recheck:
                     PasswordView(size: geo.size)
-                        .modifier(Shake(animatableData: CGFloat(incorrectPassword ? 1 : 0)))
+                        .modifier(
+                            Shake(animatableData: state.incorrectPassword ? 1 : 0) {
+                                intent.finisshShakeAnimation()
+                            }
+                        )
                 }
             }
         }
     }
-    
+}
+
+// MARK: - 
+extension PasswordSheetView {
     @ViewBuilder
     fileprivate func PasswordView(size: CGSize) -> some View {
         VStack(alignment: .center, spacing: 20) {
@@ -59,23 +77,21 @@ struct PasswordSheetView: View {
     
     @ViewBuilder
     fileprivate var PasswordExplanationText: some View {
-        Text(passwordSheetState == .firstSet ?
-             "앱 비밀번호 설정" : "비밀번호 확인")
+        Text(state.passwordExplanationMainText)
             .textStyle(MediumTitle(weight: .semibold))
         
-        Text(passwordSheetState == .firstSet ?
-             "앱 실행시 입력할 비밀번호를 설정해주세요." : "입력했던 비밀번호를 다시 입력해주세요.")
+        Text(state.passwordExplanationSubText)
             .textStyle(Paragraph(color: DesignSystemAsset.darkGray))
     }
     
     @ViewBuilder
     fileprivate var PasswordIndicator: some View {
         HStack(alignment: .center, spacing: 20) {
-            ForEach(0..<maxPasswordLength, id: \.self) { idx in
+            ForEach(0..<state.maxPasswordLength, id: \.self) { idx in
                 Circle()
                     .fill(
-                        idx < (passwordSheetState == .firstSet ?
-                               password.count : passwordRecheck.count) ?
+                        idx < (state.passwordSheetState == .firstSet ?
+                               state.password.count : state.passwordRecheck.count) ?
                         DesignSystemAsset.black : DesignSystemAsset.lightGray
                     )
                     .frame(width: 20)
@@ -94,7 +110,7 @@ struct PasswordSheetView: View {
                         let number = (row * 3) + col
                         //
                         Button {
-                            appendPassword(number: number)
+                            intent.tapPasswordNumber(number, state: state.passwordSheetState)
                         } label: {
                             Text("\(number)")
                                 .textStyle(MediumTitle(weight: .semibold,
@@ -111,7 +127,7 @@ struct PasswordSheetView: View {
                     .frame(width: buttonSize, height: 60)
                 //
                 Button {
-                    appendPassword(number: 0)
+                    intent.tapPasswordNumber(0, state: state.passwordSheetState)
                 } label: {
                     Text("0")
                         .textStyle(MediumTitle(weight: .semibold,
@@ -120,7 +136,7 @@ struct PasswordSheetView: View {
                 }
                 //
                 Button {
-                    deleteLastNumber()
+                    intent.tapDeletePasswordNumber()
                 } label: {
                     Image(systemName: "delete.left.fill")
                         .font(.title3)
@@ -128,57 +144,6 @@ struct PasswordSheetView: View {
                         .frame(width: buttonSize, height: 60)
                 }
             }
-        }
-    }
-    
-    private func isFinishButtonEnabled() -> Bool {
-        switch passwordSheetState {
-        case .firstSet:
-            password.count == maxPasswordLength
-        case .recheck:
-            passwordRecheck.count == maxPasswordLength && password == passwordRecheck
-        }
-    }
-    
-    private func appendPassword(number: Int) {
-        switch passwordSheetState {
-        case .firstSet:
-            guard password.count < maxPasswordLength else { return }
-            password.append("\(number)")
-            //
-            if password.count == maxPasswordLength {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    passwordSheetState = .recheck
-                }
-            }
-        case .recheck:
-            guard passwordRecheck.count < maxPasswordLength else { return }
-            passwordRecheck.append("\(number)")
-            //
-            if passwordRecheck.count == maxPasswordLength {
-                if password == passwordRecheck {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        showPasswordSheetView = false
-                        onComplete()
-                    }
-                } else {
-                    incorrectPassword = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        incorrectPassword = false
-                    }
-                }
-            }
-        }
-    }
-    
-    private func deleteLastNumber() {
-        switch passwordSheetState {
-        case .firstSet:
-            guard !password.isEmpty else { return }
-            password.removeLast()
-        case .recheck:
-            guard !passwordRecheck.isEmpty else { return }
-            passwordRecheck.removeLast()
         }
     }
 }

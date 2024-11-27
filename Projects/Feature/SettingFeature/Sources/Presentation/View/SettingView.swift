@@ -7,41 +7,35 @@
 //
 
 import SwiftUI
+
 import Common
+import Core
 import DesignSystem
 
 public struct SettingView: View {
-    // 다크 모드 / 라이트 모드 설정
-    @AppStorage("AppScheme") private var appScheme: AppScheme = .device
-    @SceneStorage("ShowScenePickerView") private var showPickerView: Bool = false
-    @Environment(\.colorScheme) private var scheme
-    // 다크 모드 / 라이트 모드 설정
-    @State private var schemePreviews: [SchemePreview] = []
-    @State private var isSchemePreviewVisible: Bool = false
-    @State private var overlayWindow: UIWindow?
-    // 토글 설정
-    @State private var toggleStates: [SettingModel: Bool] = [:]
-    // 비밀번호 설정
-    @State private var showPasswordSheetView: Bool = false
-    @State private var didCompletePasswordSetting: Bool = false
-    // 알림 시간 설정
-    @State private var showAlarmSheetView: Bool = false
-    @State private var didCompleteAlarmSetting: Bool = false
-    @State private var alarmTime: AlarmTime = AlarmTime(timeOfDay: .pm,
-                                                        hours: 6,
-                                                        minutes: 0)
-
+    //
+    @StateObject var container: MVIContainer<SettingIntent, SettingModelState>
+    private var intent: SettingIntent { container.intent }
+    private var state: SettingModelState { container.model }
+    
+    //
     public init() {
-        // scheme 확인
-        setWindowScheme()
+        let model = SettingModelImp()
+        let intent = SettingIntentImp(model: model)
+        let container = MVIContainer(
+            intent: intent as SettingIntent,
+            model: model as SettingModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
     }
-
+    
     public var body: some View {
         NavigationStack {
             // 스크롤 뷰
             ScrollView {
                 LazyVStack(spacing: 10) {
-                    ForEach(SettingModel.allCases, id: \.self) { item in
+                    ForEach(SettingItem.allCases, id: \.self) { item in
                         // 각 세팅 아이템
                         HStack(alignment: .center) {
                             //
@@ -72,70 +66,64 @@ public struct SettingView: View {
             .toolbar { settingViewToolbarContent() }
         }
         // 비밀번호 설정
-        .sheet(isPresented: $showPasswordSheetView, onDismiss: {
-            if !didCompletePasswordSetting {
-                toggleStates[.lock] = false
+        .sheet(
+            isPresented: Binding(get: { state.showPasswordSheetView },
+                                 set: { intent.setShowPasswordSheet($0) }),
+            onDismiss: {
+                intent.dismissPasswordSheet()
+            },
+            content: {
+                PasswordSheetView { [weak intent] in
+                    intent?.completePasswordSetting()
+                }
             }
-        }, content: {
-            PasswordSheetView(showPasswordSheetView: $showPasswordSheetView) {
-                didCompletePasswordSetting = true
-            }
-        })
+        )
         // 알람 설정
-        .sheet(isPresented: $showAlarmSheetView, onDismiss: {
-            if !didCompleteAlarmSetting {
-                toggleStates[.notice] = false
+        .sheet(
+            isPresented: Binding(get: { state.showAlarmSheetView },
+                                 set: { intent.setShowAlarmSheet($0) }),
+            onDismiss: {
+                intent.dismissAlarmSheet()
+            },
+            content: {
+                AlarmSheetView(alarmTime: state.alarmTime) { [weak intent] alarmTime in
+                    intent?.setAlarmTime(alarmTime)
+                } finishSetAlarmCompletion: { [weak intent] in
+                    intent?.completeAlarmSetting()
+                }
             }
-        }, content: {
-            TimePickerView(alarmTime: $alarmTime, showAlarmSheetView: $showAlarmSheetView) {
-                didCompleteAlarmSetting = true
-            }
-        })
+        )
         // 다크 모드 / 라이트 모드
-        .sheet(isPresented: $showPickerView, onDismiss: {
-            schemePreviews = []
-            showPickerView = false
-        }, content: {
-            SchemePickerView(previews: $schemePreviews)
-        })
-        .onChange(of: showPickerView) { oldValue, newValue in
-            if newValue {
-                generateSchemwPreviews()
-            } else {
-                isSchemePreviewVisible = false
+        .sheet(
+            isPresented: Binding(get: { state.showSchemePickerView },
+                                 set: { intent.setShowSchemePicker($0) }),
+            onDismiss: {
+                intent.dismissSchemePicker()
+            },
+            content: {
+                SchemePickerView(previews: state.schemePreviews)
             }
-        }
+        )
         .onAppear {
-            if let scene = (UIApplication.shared.connectedScenes.first as? UIWindowScene),
-               overlayWindow == nil {
-                
-                let window = UIWindow(windowScene: scene)
-                window.backgroundColor = .clear
-                window.isHidden = false
-                window.isUserInteractionEnabled = false
-                
-                let emptyController = UIViewController()
-                emptyController.view.backgroundColor = .clear
-                
-                window.rootViewController = emptyController
-                
-                overlayWindow = window
-            }
+            intent.viewOnAppear()
         }
-        .animation(.easeInOut(duration: 0.25), value: appScheme)
+        .animation(.easeInOut(duration: 0.25), value: intent.appScheme)
         //
         .tint(DesignSystemAsset.black)
     }
-    
+}
+
+// MARK: -
+extension SettingView {
     @ViewBuilder
-    private func settingItemIcon(_ item: SettingModel) -> some View {
+    private func settingItemIcon(_ item: SettingItem) -> some View {
         switch item.type {
         case .navigate:
             Button {
                 // TODO: -
                 switch item {
                 case .displayMode:
-                    showPickerView.toggle()
+                    intent.openSchemePicker()
                 case .font:
                     break
                 case .deleteData:
@@ -161,38 +149,23 @@ public struct SettingView: View {
         case .toggle:
             HStack(alignment: .center, spacing: 20) {
                 //
-                if item == .notice, let notice = toggleStates[.notice], notice {
-                    Text("\(alarmTime.timeOfDay.rawValue) \(String(format: "%02d", alarmTime.hours)):\(String(format: "%02d", alarmTime.minutes))")
+                if item == .notice,
+                   state.toggleStates[.notice] == true {
+                    Text(state.formattedAlarmTime)
                         .textStyle(Paragraph())
                 }
                 //
                 Toggle("", isOn: Binding(
-                    get: { toggleStates[item] ?? false },
-                    set: {
-                        if $0 {
-                            // 잠금 설정
-                            if item == .lock {
-                                showPasswordSheetView = true
-                            } else {
-                                // 알림 설정
-                                showAlarmSheetView = true
-                                // TODO: -
-                            }
-                        } else {
-                            didCompletePasswordSetting = $0
-                            didCompleteAlarmSetting = $0
-                        }
-                        toggleStates[item] = $0
-                    }
+                    get: { state.toggleStates[item] ?? false },
+                    set: { intent.setToggle(value: $0, item: item) }
                 ))
                 .labelsHidden()
                 .tint(DesignSystemAsset.bittersweet)
             }
         case .text:
-            Text("\(Version.getAppVersion()) (\(Version.getBuildVersion()))")
+            Text(state.formattedAppVersion)
                 .textStyle(Paragraph())
         }
-        
     }
     
     @ToolbarContentBuilder
@@ -202,73 +175,5 @@ public struct SettingView: View {
                 .textStyle(Title(weight: .bold))
                 .padding(.horizontal, ViewValues.halfPadding)
         }
-    }
-    
-    private func setWindowScheme() {
-        if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow {
-            window.overrideUserInterfaceStyle = appScheme == .dark ? .dark : appScheme == .light ? .light : .unspecified
-        }
-    }
-    
-    @MainActor
-    private func generateSchemwPreviews() {
-        Task {
-            if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow,
-               schemePreviews.isEmpty {
-                let size = window.screen.bounds.size
-                let defaultStyle = window.overrideUserInterfaceStyle
-                
-                let defautSchemePreview = window.image(size)
-                
-                schemePreviews.append(
-                    .init(
-                        image: defautSchemePreview,
-                        text: scheme == .dark ? AppScheme.dark.rawValue : AppScheme.light.rawValue
-                    )
-                )
-                
-                showOverlayImageView(defautSchemePreview)
-                
-                window.overrideUserInterfaceStyle = scheme.oppsiteInterfaceStyle
-                let otherSchemePreviewImage = window.image(size)
-                
-                schemePreviews.append(
-                    .init(
-                        image: otherSchemePreviewImage,
-                        text: scheme == .dark ? AppScheme.light.rawValue : AppScheme.dark.rawValue
-                    )
-                )
-                
-                if scheme == .dark { schemePreviews = schemePreviews.reversed() }
-                
-                window.overrideUserInterfaceStyle = defaultStyle
-                try? await Task.sleep(for: .seconds(0))
-                
-                removeOverlayImageView()
-                
-                isSchemePreviewVisible = true
-            }
-        }
-    }
-    
-    private func showOverlayImageView(_ image: UIImage?) {
-        if overlayWindow?.rootViewController?.view.subviews.isEmpty ?? false {
-            let imageView = UIImageView(image: image)
-            imageView.contentMode = .scaleAspectFit
-            
-            overlayWindow?.rootViewController?.view.addSubview(imageView)
-        }
-    }
-    
-    private func removeOverlayImageView() {
-        overlayWindow?.rootViewController?.view.subviews.forEach {
-            $0.removeFromSuperview()
-        }
-    }
-}
-
-extension ColorScheme {
-    var oppsiteInterfaceStyle: UIUserInterfaceStyle {
-        return self == .dark ? .light : .dark
     }
 }

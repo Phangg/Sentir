@@ -7,14 +7,14 @@
 //
 
 // MARK: - 세팅 아이템의 우측 아이콘 타입
-public enum SettingType {
+public enum SettingIconType {
     case navigate
     case toggle
     case text
 }
 
-// MARK: - 세팅 아이템 모델
-public enum SettingModel: String, CaseIterable {
+// MARK: - 세팅 아이템
+public enum SettingItem: String, CaseIterable {
     //
     case lock = "잠금 설정"
     case notice = "알림 설정"
@@ -32,7 +32,7 @@ public enum SettingModel: String, CaseIterable {
     case openSource = "오픈 소스"
     
     //
-    var type: SettingType {
+    var type: SettingIconType {
         switch self {
         case .lock, .notice:
             return .toggle

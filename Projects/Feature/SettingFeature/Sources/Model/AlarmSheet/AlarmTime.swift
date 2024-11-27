@@ -6,7 +6,7 @@
 //  Copyright © 2024 Sentir. All rights reserved.
 //
 
-public struct AlarmTime {
+struct AlarmTime {
     public var timeOfDay: TimeOfDay
     public var hours: Int
     public var minutes: Int
@@ -20,4 +20,9 @@ public struct AlarmTime {
         self.hours = hours
         self.minutes = minutes
     }
+}
+
+enum TimeOfDay: String, CaseIterable {
+    case am = "오전"
+    case pm = "오후"
 }

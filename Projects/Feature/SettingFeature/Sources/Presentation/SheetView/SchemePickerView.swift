@@ -7,21 +7,30 @@
 //
 
 import SwiftUI
+
 import Common
+import Core
 import DesignSystem
 
 public struct SchemePickerView: View {
-    // 다크 모드 / 라이트 모드 설정
-    @AppStorage("AppScheme") private var appScheme: AppScheme = .device
-    // 미리보기 화면
-    @Binding var previews: [SchemePreview]
+    @StateObject var container: MVIContainer<SchemeIntent, SchemeModelState>
+    private var intent: SchemeIntent { container.intent }
+    private var state: SchemeModelState { container.model }
+
     //
-    @State private var localSchemeState: AppScheme = .device
-    
     public init(
-        previews: Binding<[SchemePreview]>
+        previews: [SchemePreview]
     ) {
-        self._previews = previews
+        let model = SchemeModelImp(previews: previews)
+        let intent = SchemeIntentImp(
+            model: model
+        )
+        let container = MVIContainer(
+            intent: intent as SchemeIntent,
+            model: model as SchemeModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
     }
     
     public var body: some View {
@@ -35,18 +44,16 @@ public struct SchemePickerView: View {
             GeometryReader { _ in
                 HStack(spacing: 0) {
                     // 다크, 라이트
-                    ForEach(previews) { preview in
-                        SchemeCardView([preview])
+                    ForEach(state.previews) { preview in
+                        SchemeCardView([preview], schemeType: preview.text == AppScheme.dark.rawValue ? .dark : .light)
                     }
                     // 사용자 기기
-                    SchemeCardView(previews)
+                    SchemeCardView(state.previews, schemeType: .device)
                 }
             }
         }
         .padding(ViewValues.defaultPadding)
-        .frame(maxWidth: .infinity,
-               maxHeight: .infinity,
-               alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background {
             ZStack {
                 Rectangle()
@@ -59,30 +66,33 @@ public struct SchemePickerView: View {
         .padding(.horizontal, ViewValues.defaultPadding)
         .presentationDetents([.height(320)])
         .presentationBackground(.clear)
-        .onChange(of: appScheme, initial: true) { oldValue, newValue in
-            localSchemeState = newValue
-        }
-        .animation(.easeInOut(duration: 0.25), value: appScheme)
+        .animation(.easeInOut(duration: 0.25), value: intent.appScheme)
     }
-    
+}
+
+// MARK: -
+extension SchemePickerView {
     @ViewBuilder
-    fileprivate func SchemeCardView(_ preview: [SchemePreview]) -> some View {
+    fileprivate func SchemeCardView(
+        _ previews: [SchemePreview],
+        schemeType: AppScheme
+    ) -> some View {
+        //
         VStack(spacing: 6) {
-            if let image = preview.first?.image {
+            if let image = previews.first?.image {
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .overlay {
-                        if let secondImage = preview.last?.image, preview.count == 2 {
-                            GeometryReader {
-                                let width = $0.size.width / 2
-                                
+                        if schemeType == .device,
+                           let secondImage = previews.last?.image {
+                            GeometryReader { geo in
                                 Image(uiImage: secondImage)
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .mask(alignment: .trailing) {
                                         Rectangle()
-                                            .frame(width: width)
+                                            .frame(width: geo.size.width / 2)
                                     }
                             }
                         }
@@ -90,38 +100,25 @@ public struct SchemePickerView: View {
                     .clipShape(.rect(cornerRadius: 15))
             }
             // 설명 텍스트 값 할당
-            let text = preview.count == 2 ? AppScheme.device.rawValue : preview.first?.text ?? ""
+            let text = schemeType == .device ? AppScheme.device.rawValue : previews.first?.text ?? ""
             // 텍스트
             Text(text)
                 .font(.caption)
                 .tint(DesignSystemAsset.darkGray)
             // 체크 마크
             ZStack {
-                if localSchemeState.rawValue == text {
+                if state.localSchemeState.rawValue == text {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DesignSystemAsset.black)
                         .transition(.blurReplace)
                 }
-                
                 Image(systemName: "circle")
             }
         }
         .frame(maxWidth: .infinity)
         .contentShape(.rect)
         .onTapGesture {
-            if preview.count == 2 {
-                appScheme = .device
-            } else {
-                appScheme = preview.first?.text == AppScheme.dark.rawValue ? .dark : .light
-            }
-            //
-            updateScheme()
-        }
-    }
-    
-    private func updateScheme() {
-        if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow {
-            window.overrideUserInterfaceStyle = appScheme == .dark ? .dark : appScheme == .light ? .light : .unspecified
+            intent.tapSchemeCard(previews, schemeType: schemeType)
         }
     }
 }
