@@ -26,6 +26,7 @@ final class MainTabIntentImp {
     }
 }
 
+// MARK: - Intent
 extension MainTabIntentImp: MainTabIntent {
     func changeTab(to tab: TabType) {
         model?.updateTab(tab)

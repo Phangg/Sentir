@@ -18,7 +18,7 @@ public class AppSchemeUseCaseImp: AppSchemeUseCase {
     }
     
     public var currentScheme: AppScheme {
-        return appSchemeRepository.currentScheme
+        appSchemeRepository.currentScheme
     }
     
     public func updateScheme(_ scheme: AppScheme) {

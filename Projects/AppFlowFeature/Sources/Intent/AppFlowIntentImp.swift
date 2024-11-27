@@ -13,7 +13,7 @@ import Core
 import Domain
 import SplashFeature
 
-class AppFlowIntentImp {
+final class AppFlowIntentImp {
     // Model
     private weak var model: AppFlowModelAction?
     // Dependencies
@@ -23,7 +23,6 @@ class AppFlowIntentImp {
     private var appSchemeUpdateService: AppSchemeUpdateService
     // Business Data
 
-    
     //
     init(
         model: AppFlowModelAction
@@ -32,6 +31,7 @@ class AppFlowIntentImp {
     }
 }
 
+// MARK: - Intent
 extension AppFlowIntentImp: AppFlowIntent {
     //
     var appScheme: AppScheme {

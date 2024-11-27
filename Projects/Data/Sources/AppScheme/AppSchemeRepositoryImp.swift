@@ -17,7 +17,7 @@ public final class AppSchemeRepositoryImp: AppSchemeRepository {
     public init() { }
     
     public var currentScheme: AppScheme {
-        return storedScheme
+        storedScheme
     }
     
     public func updateScheme(_ scheme: AppScheme) {

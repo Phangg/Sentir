@@ -1,5 +1,5 @@
 //
-//  Version.swift
+//  VersionHelper.swift
 //  Common
 //
 //  Created by phang on 9/11/24.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Version {
+public struct VersionHelper {
     // 앱 버전
     public static func getAppVersion() -> String {
         guard let dictionary = Bundle.main.infoDictionary,

@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-import Core
 import Common
+import Core
 import MainTabFeature
 import OnboardingFeature
 import SplashFeature
@@ -34,9 +34,9 @@ public struct AppFlowView: View {
         Group {
             switch state.currentFlow {
             case .splash:
-                SplashView(onFinishSplash: { [weak intent] in
+                SplashView { [weak intent] in
                     intent?.finishSplash()
-                })
+                }
             case .onboarding:
                 OnboardingView { [weak intent] in
                     intent?.completeOnboarding()
