@@ -14,6 +14,8 @@ final class OnboardingIntentImp {
     //
     private weak var model: OnboardingModelAction?
     private let configuration: OnboardingConfiguration
+    // OnboardingIntent Property
+    var finishOnboardingCompletion: () -> Void
     //
     private var timerCancellable: AnyCancellable?
     private var isTimerPaused: Bool = false
@@ -26,32 +28,17 @@ final class OnboardingIntentImp {
     //
     init(
         model: OnboardingModelAction,
-        configuration: OnboardingConfiguration
+        configuration: OnboardingConfiguration,
+        finishOnboardingCompletion: @escaping () -> Void
     ) {
         self.model = model
         self.configuration = configuration
+        self.finishOnboardingCompletion = finishOnboardingCompletion
         //
         setupPublishers()
     }
     
     //
-    private func setupPublishers() {
-        //
-        pageTransitionSubject
-            .delay(for: .seconds(0.2), scheduler: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.startTimer()
-            }
-            .store(in: &cancellables)
-        //
-        indicatorTransitionSubject
-            .delay(for: .seconds(0.2), scheduler: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.resetTimer()
-            }
-            .store(in: &cancellables)
-    }
-    
     private func startTimer() {
         guard timerCancellable == nil, !isTimerPaused else { return }
         timerCancellable = Timer.publish(every: configuration.timerInterval, on: .main, in: .common)
@@ -112,6 +99,7 @@ final class OnboardingIntentImp {
     }
 }
 
+// MARK: - Intent
 extension OnboardingIntentImp: OnboardingIntent {
     //
     var finishOnboardingPublisher: AnyPublisher<Void, Never> {
@@ -152,5 +140,33 @@ extension OnboardingIntentImp: OnboardingIntent {
         guard isTimerPaused else { return }
         isTimerPaused = false
         startTimer()
+    }
+}
+
+// MARK: - setupPublishers
+extension OnboardingIntentImp {
+    private func setupPublishers() {
+        // 페이지 전환 관련
+        pageTransitionSubject
+            .delay(for: .seconds(0.2), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.startTimer()
+            }
+            .store(in: &cancellables)
+        // 인디케이터 전환 관련
+        indicatorTransitionSubject
+            .delay(for: .seconds(0.2), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.resetTimer()
+            }
+            .store(in: &cancellables)
+        // 온보딩 완료 시
+        finishOnboardingSubject
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.cleanUp()
+                self?.finishOnboardingCompletion()
+            }
+            .store(in: &cancellables)
     }
 }

@@ -12,6 +12,7 @@ import Combine
 protocol OnboardingIntent: AnyObject {
     //
     var finishOnboardingPublisher: AnyPublisher<Void, Never> { get }
+    var finishOnboardingCompletion: () -> Void { get }
     //
     func viewOnAppear()
     func viewOnDisappear()

@@ -17,19 +17,16 @@ public struct OnboardingView: View {
     @StateObject var container: MVIContainer<OnboardingIntent, OnboardingModelState>
     private var intent: OnboardingIntent { container.intent }
     private var state: OnboardingModelState { container.model }
-    //
-    public var finishOnboardingPublisher: AnyPublisher<Void, Never> {
-        (container.intent).finishOnboardingPublisher
-    }
     
     public init(
-        finishOnboarding: @escaping () -> Void,
+        finishOnboardingCompletion: @escaping () -> Void,
         configuration: OnboardingConfiguration = .default
     ) {
         let model = OnboardingModelImp()
         let intent = OnboardingIntentImp(
             model: model,
-            configuration: configuration
+            configuration: configuration,
+            finishOnboardingCompletion: finishOnboardingCompletion
         )
         let container = MVIContainer(
             intent: intent as OnboardingIntent,
@@ -37,14 +34,6 @@ public struct OnboardingView: View {
             modelChangePublisher: model.objectWillChange
         )
         self._container = StateObject(wrappedValue: container)
-        //
-        intent.finishOnboardingPublisher
-            .receive(on: RunLoop.main)
-            .sink { [weak intent] _ in
-                intent?.cleanUp()
-                finishOnboarding()
-            }
-            .store(in: &intent.cancellables)
     }
 
     public var body: some View {

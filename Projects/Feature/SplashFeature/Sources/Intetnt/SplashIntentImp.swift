@@ -13,18 +13,25 @@ import Combine
 final class SplashIntentImp {
     //
     private weak var model: SplashModelAction?
+    // SplashIntent Property
+    var finishSplashCompletion: () -> Void
     // Combine
     private let finishSplashSubject = PassthroughSubject<Void, Never>()
     var cancellables = Set<AnyCancellable>()
 
     //
     init(
-        model: SplashModelAction
+        model: SplashModelAction,
+        finishSplashCompletion: @escaping () -> Void
     ) {
         self.model = model
+        self.finishSplashCompletion = finishSplashCompletion
+        //
+        setupPublishers()
     }
 }
 
+// MARK: - Intent
 extension SplashIntentImp: SplashIntent {
     //
     var finishSplashPublisher: AnyPublisher<Void, Never> {
@@ -41,5 +48,18 @@ extension SplashIntentImp: SplashIntent {
             self?.model?.finishSplashFetch()
             self?.finishSplashSubject.send()
         }
+    }
+}
+
+// MARK: - setupPublishers
+extension SplashIntentImp {
+    private func setupPublishers() {
+        // 스플래시 완료 시
+        finishSplashSubject
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.finishSplashCompletion()
+            }
+            .store(in: &cancellables)
     }
 }

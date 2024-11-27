@@ -12,6 +12,7 @@ import Combine
 protocol SplashIntent: AnyObject {
     //
     var finishSplashPublisher: AnyPublisher<Void, Never> { get }
+    var finishSplashCompletion: () -> Void { get }
     //
     func viewOnAppear()
 }
