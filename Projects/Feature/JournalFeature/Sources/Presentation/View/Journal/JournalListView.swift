@@ -1,5 +1,5 @@
 //
-//  ListView.swift
+//  JournalListView.swift
 //  JournalFeature
 //
 //  Created by phang on 9/4/24.
@@ -11,7 +11,7 @@ import Common
 import DesignSystem
 import JournalHandlerFeature
 
-public struct ListView: View {
+public struct JournalListView: View {
     @State private var journalData = JournalData.sample
     private let listType: ListViewType
     

@@ -1,5 +1,5 @@
 //
-//  CalendarView.swift
+//  JournalCalendarView.swift
 //  JournalFeature
 //
 //  Created by phang on 9/4/24.
@@ -10,7 +10,7 @@ import SwiftUI
 import Common
 import DesignSystem
 
-struct CalendarView: View {
+struct JournalCalendarView: View {
     @State private var month: Date = Date()
     @State private var refreshId = UUID()
     @Binding var selectedMonthAndDates: Date

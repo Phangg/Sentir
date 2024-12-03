@@ -36,7 +36,7 @@ public struct SearchView: View {
                     ProgressView()
                 case .finish:
                     // TODO: - 검색 결과 전달
-                    ListView(listType: .search(searchText: searchText))
+                    JournalListView(listType: .search(searchText: searchText))
                         .padding(.horizontal, -ViewValues.defaultPadding)
                 }
                 //
