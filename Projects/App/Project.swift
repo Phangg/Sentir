@@ -13,6 +13,8 @@ let project = Project.makeProject(
     moduleType: .app,
     dependencies: [
         .appFlowFeature,
-        .data
+        .data,
+        //
+        .external(name: "LinkNavigator")
     ]
 )

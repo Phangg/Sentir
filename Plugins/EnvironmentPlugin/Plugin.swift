@@ -7,4 +7,4 @@
 
 import ProjectDescription
 
-let EnvironmentPlugin = Plugin(name: "EnvironmentPlugin")
+@MainActor let EnvironmentPlugin = Plugin(name: "EnvironmentPlugin")

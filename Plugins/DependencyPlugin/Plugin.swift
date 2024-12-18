@@ -7,4 +7,4 @@
 
 import ProjectDescription
 
-let DependencyPlugin = Plugin(name: "DependencyPlugin")
+@MainActor let DependencyPlugin = Plugin(name: "DependencyPlugin")
