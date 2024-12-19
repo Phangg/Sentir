@@ -11,7 +11,6 @@ import UIKit
 import Common
 
 // MARK: - State
-@MainActor
 protocol SettingModelState: AnyObject {
     // 다크 모드 / 라이트 모드 설정
     var schemePreviews: [SchemePreview] { get }
@@ -32,7 +31,6 @@ protocol SettingModelState: AnyObject {
 }
 
 // MARK: - Action
-@MainActor
 protocol SettingModelAction: AnyObject {
     //
     func updateSchemePreviews(_ previews: [SchemePreview])
@@ -45,6 +43,6 @@ protocol SettingModelAction: AnyObject {
     func updateDidCompleteAlarmSetting(_ value: Bool)
     func deactivePasswordToggleState()
     func deactiveAlarmToggleState()
-    func generateSchemePreviews(currentScheme: UIUserInterfaceStyle)
+    @MainActor func generateSchemePreviews(currentScheme: UIUserInterfaceStyle)
     func prepareOverlayWindow()
 }

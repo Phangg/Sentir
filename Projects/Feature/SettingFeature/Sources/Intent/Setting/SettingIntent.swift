@@ -8,7 +8,6 @@
 
 import Common
 
-@MainActor
 protocol SettingIntent: AnyObject {
     //
     var appScheme: AppScheme { get }
@@ -24,5 +23,5 @@ protocol SettingIntent: AnyObject {
     func setShowAlarmSheet(_ value: Bool)
     func setShowSchemePicker(_ value: Bool)
     func setAlarmTime(_ time: AlarmTime)
-    func openSchemePicker()
+    @MainActor func openSchemePicker()
 }

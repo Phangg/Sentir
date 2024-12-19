@@ -13,7 +13,6 @@ import Common
 import Core
 import Domain
 
-@MainActor
 final class SettingIntentImp {
     //
     private weak var model: SettingModelAction?
@@ -70,9 +69,11 @@ extension SettingIntentImp: SettingIntent {
     
     func setToggle(value: Bool, item: SettingItem) {
         if value {
+            // Open PasswordSheet
             if item == .lock {
                 // TODO: - 잠금 설정
                 model?.updateShowPasswordSheet(true)
+            // Open AlarmSheet
             } else if item == .notice {
                 // TODO: - 알림 설정
                 model?.updateShowAlarmSheet(true)
@@ -102,6 +103,7 @@ extension SettingIntentImp: SettingIntent {
         model?.updateAlarmTime(time)
     }
     
+    @MainActor
     func openSchemePicker() {
         model?.generateSchemePreviews(currentScheme: SystemStyleHelper.currentSystemInterfaceStyle)
         Just(())

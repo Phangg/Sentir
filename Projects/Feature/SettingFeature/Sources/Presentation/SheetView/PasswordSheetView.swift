@@ -12,31 +12,19 @@ import Common
 import Core
 import DesignSystem
 
-struct PasswordSheetView: View {
-    //
+public struct PasswordSheetView: View {
     @StateObject var container: MVIContainer<PasswordIntent, PasswordModelState>
     private var intent: PasswordIntent { container.intent }
     private var state: PasswordModelState { container.model }
 
     //
     init(
-        finishSetPasswordCompletion: @escaping () -> Void
+        container: MVIContainer<PasswordIntent, PasswordModelState>
     ) {
-        let model = PasswordModelImp()
-        let intent = PasswordIntentImp(
-            model: model,
-            finishSetPasswordCompletion: finishSetPasswordCompletion
-        )
-        let container = MVIContainer(
-            intent: intent as PasswordIntent,
-            model: model as PasswordModelState,
-            modelChangePublisher: model.objectWillChange
-        )
         self._container = StateObject(wrappedValue: container)
     }
-    
-    
-    var body: some View {
+
+    public var body: some View {
         GeometryReader { geo in
             //
             VStack {

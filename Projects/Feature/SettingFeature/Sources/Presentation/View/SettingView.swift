@@ -19,14 +19,9 @@ public struct SettingView: View {
     private var state: SettingModelState { container.model }
     
     //
-    public init() {
-        let model = SettingModelImp()
-        let intent = SettingIntentImp(model: model)
-        let container = MVIContainer(
-            intent: intent as SettingIntent,
-            model: model as SettingModelState,
-            modelChangePublisher: model.objectWillChange
-        )
+    init(
+        container: MVIContainer<SettingIntent, SettingModelState>
+    ) {
         self._container = StateObject(wrappedValue: container)
     }
     
@@ -73,9 +68,12 @@ public struct SettingView: View {
                 intent.dismissPasswordSheet()
             },
             content: {
-                PasswordSheetView { [weak intent] in
-                    intent?.completePasswordSetting()
-                }
+                PasswordSheetView.build(
+                    finishSetPasswordCompletion: { [weak intent] in
+                        intent?.completePasswordSetting()
+                    }
+                )
+                .environmentObject(container)
             }
         )
         // 알람 설정
@@ -86,11 +84,15 @@ public struct SettingView: View {
                 intent.dismissAlarmSheet()
             },
             content: {
-                AlarmSheetView(alarmTime: state.alarmTime) { [weak intent] alarmTime in
-                    intent?.setAlarmTime(alarmTime)
-                } finishSetAlarmCompletion: { [weak intent] in
-                    intent?.completeAlarmSetting()
-                }
+                AlarmSheetView.build(
+                    alarmTime: state.alarmTime,
+                    updateAlarmTimeCompletion: { [weak intent] alarmTime in
+                        intent?.setAlarmTime(alarmTime)
+                    },
+                    finishSetAlarmCompletion: { [weak intent] in
+                        intent?.completeAlarmSetting()
+                    }
+                )
             }
         )
         // 다크 모드 / 라이트 모드
@@ -101,7 +103,7 @@ public struct SettingView: View {
                 intent.dismissSchemePicker()
             },
             content: {
-                SchemePickerView(previews: state.schemePreviews)
+                SchemePickerView.build(previews: state.schemePreviews)
             }
         )
         .onAppear {
@@ -157,7 +159,7 @@ extension SettingView {
                 //
                 Toggle("", isOn: Binding(
                     get: { state.toggleStates[item] ?? false },
-                    set: { intent.setToggle(value: $0, item: item) }
+                    set: { intent.setToggle(value: $0, item: item) } // Open Sheet
                 ))
                 .labelsHidden()
                 .tint(DesignSystemAsset.bittersweet)

@@ -19,21 +19,8 @@ struct AlarmSheetView: View {
     
     //
     init(
-        alarmTime: AlarmTime,
-        updateAlarmTimeCompletion: @escaping (AlarmTime) -> Void,
-        finishSetAlarmCompletion: @escaping () -> Void
+        container: MVIContainer<AlarmIntent, AlarmModelState>
     ) {
-        let model = AlarmModelImp(alarmTime: alarmTime)
-        let intent = AlarmIntentImp(
-            model: model,
-            setAlarmTimeCompletion: updateAlarmTimeCompletion,
-            finishSetAlarmCompletion: finishSetAlarmCompletion
-        )
-        let container = MVIContainer(
-            intent: intent as AlarmIntent,
-            model: model as AlarmModelState,
-            modelChangePublisher: model.objectWillChange
-        )
         self._container = StateObject(wrappedValue: container)
     }
     

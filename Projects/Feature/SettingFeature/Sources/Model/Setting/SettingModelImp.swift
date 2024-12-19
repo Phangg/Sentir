@@ -11,7 +11,6 @@ import Combine
 
 import Common
 
-@MainActor
 final class SettingModelImp: ObservableObject, SettingModelState {
     // 다크 모드 / 라이트 모드 설정
     @Published private(set) var schemePreviews: [SchemePreview]
@@ -120,6 +119,7 @@ extension SettingModelImp: SettingModelAction {
         }
     }
     
+    @MainActor
     func generateSchemePreviews(currentScheme: UIUserInterfaceStyle) {
         Task {
             if let window = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow,

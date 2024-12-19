@@ -18,18 +18,9 @@ public struct SchemePickerView: View {
     private var state: SchemeModelState { container.model }
 
     //
-    public init(
-        previews: [SchemePreview]
+    init(
+        container: MVIContainer<SchemeIntent, SchemeModelState>
     ) {
-        let model = SchemeModelImp(previews: previews)
-        let intent = SchemeIntentImp(
-            model: model
-        )
-        let container = MVIContainer(
-            intent: intent as SchemeIntent,
-            model: model as SchemeModelState,
-            modelChangePublisher: model.objectWillChange
-        )
         self._container = StateObject(wrappedValue: container)
     }
     

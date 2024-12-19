@@ -45,7 +45,9 @@ extension PasswordIntentImp: PasswordIntent {
     
     //
     func tapPasswordNumber(_ number: Int, state: PasswordSheetState) {
-        guard let model = model else { fatalError("PasswordModelAction 을 찾지 못함") }
+        guard let model = model else {
+            fatalError("PasswordModelAction 을 찾지 못함")
+        }
         //
         guard model.isPasswordAppendable() else { return }
         model.addPasswordNumber(number)
