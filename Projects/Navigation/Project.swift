@@ -9,11 +9,11 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: "App",
-    moduleType: .app,
+    name: "Navigation",
+    moduleType: .dynamicFramework,
     dependencies: [
-        .navigation,
-        .appFlowFeature,
-        .data,
+        .common,
+        //
+        .external(name: "LinkNavigator")
     ]
 )
