@@ -9,7 +9,7 @@
 import SwiftUI
 import DesignSystem
 
-public enum JournalFlag: Int {
+enum JournalFlag: Int {
     case nothing = 0
     case low = 1
     case medium = 3

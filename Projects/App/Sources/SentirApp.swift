@@ -8,11 +8,12 @@
 
 import SwiftUI
 
+import Common
 import AppFlowFeature
 
 @main
 struct SentirApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
         WindowGroup {

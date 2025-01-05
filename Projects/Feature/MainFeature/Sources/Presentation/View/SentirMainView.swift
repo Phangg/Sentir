@@ -21,18 +21,9 @@ public struct SentirMainView: View {
     private var intent: MainIntent { container.intent }
     private var state: MainModelState { container.model }
     
-    public init() {
-        let scrollService = MainViewScrollServiceImp()
-        let model = MainModelImp()
-        let intent = MainIntentImp(
-            model: model,
-            scrollService: scrollService
-        )
-        let container = MVIContainer(
-            intent: intent as MainIntent,
-            model: model as MainModelState,
-            modelChangePublisher: model.objectWillChange
-        )
+    init(
+        container: MVIContainer<MainIntent, MainModelState>
+    ) {
         self._container = StateObject(wrappedValue: container)
     }
     
@@ -112,7 +103,7 @@ extension SentirMainView {
             }
             .overlay(DraggedControlOverlay)
             .navigationDestination(for: JournalContentControl.self) { control in
-                WriteJournalView(viewState: .create,
+                JournalEditorView(viewState: .create,
                                  journalType: control.type)
             }
             .onChange(of: state.selectedControlScale) { oldValue, newValue in

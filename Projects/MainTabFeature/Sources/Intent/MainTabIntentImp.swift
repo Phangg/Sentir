@@ -35,4 +35,12 @@ extension MainTabIntentImp: MainTabIntent {
     func removeDefaultTabBar() {
         model?.removeDefaultTabBar()
     }
+    
+    func updateCustomTabBarState(isHidden: Bool) {
+        if isHidden {
+            model?.hideCustomTabBar()
+        } else {
+            model?.showCustomTabBar()
+        }
+    }
 }

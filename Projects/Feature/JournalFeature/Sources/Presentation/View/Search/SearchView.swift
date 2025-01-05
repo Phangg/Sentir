@@ -7,17 +7,35 @@
 //
 
 import SwiftUI
+
 import Common
+import Core
 import DesignSystem
 
 public struct SearchView: View {
-    @EnvironmentObject private var tabBarState: TabBarState
     @Environment(\.dismiss) private var dismiss
-    @FocusState private var isSearchFocused: Bool
-    @State private var searchText: String = ""
-    @State private var searchState: JournalSearchState = .none
+    //
+    @StateObject var container: MVIContainer<SearchIntent, SearchModelState>
+    private var intent: SearchIntent { container.intent }
+    private var state: SearchModelState { container.model }
     
-    public init() { }
+    public init(
+        handleSearchCompletion: @escaping ([String: [Journal]]) -> Void,
+        finalizeSearchFlow: @escaping () -> Void
+    ) {
+        let model = SearchModelImp()
+        let intent = SearchIntentImp(
+            model: model,
+            handleSearchCompletion: handleSearchCompletion,
+            finalizeSearchFlow: finalizeSearchFlow
+        )
+        let container = MVIContainer(
+            intent: intent as SearchIntent,
+            model: model as SearchModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
+    }
     
     public var body: some View {
         ZStack {
@@ -27,16 +45,15 @@ public struct SearchView: View {
                 //
                 Spacer(minLength: 0)
                 //
-                switch searchState {
+                switch state.searchState {
                 case .none, .noResult:
-                    Text(searchState == .none ? "" : "검색 결과가 없습니다.")
+                    Text(state.searchState == .none ? "" : "검색 결과가 없습니다.")
                         .textStyle(SmallTitle(weight: .medium))
                 case .isSearching:
-                    // TODO: -
+                    // TODO: - progressview 만들어서 수정 예정
                     ProgressView()
                 case .finish:
-                    // TODO: - 검색 결과 전달
-                    JournalListView(listType: .search(searchText: searchText))
+                    JournalListView()
                         .padding(.horizontal, -ViewValues.defaultPadding)
                 }
                 //
@@ -46,11 +63,10 @@ public struct SearchView: View {
             .padding(.horizontal, ViewValues.defaultPadding)
         }
         .onTapGesture {
-            isSearchFocused = false
+            intent.deactivateSearchFocus()
         }
         .onAppear {
-            tabBarState.hide()
-            isSearchFocused = true
+            intent.viewOnAppear()
         }
     }
     
@@ -60,12 +76,11 @@ public struct SearchView: View {
             //
             BackButton(isCutstomView: true) {
                 self.dismiss()
-                tabBarState.show()
+                intent.tapBackButton()
             }
             //
-            SearchBar(searchText: $searchText,
-                      searchState: $searchState,
-                      isSearchFocused: $isSearchFocused)
+            SearchBar()
+                .environmentObject(container)
         }
     }
 }

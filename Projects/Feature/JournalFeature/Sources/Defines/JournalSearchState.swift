@@ -6,7 +6,7 @@
 //  Copyright © 2024 Sentir. All rights reserved.
 //
 
-public enum JournalSearchState {
+enum JournalSearchState {
     case none
     case isSearching
     case noResult

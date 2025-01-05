@@ -15,4 +15,6 @@ protocol MainTabIntent: AnyObject {
     //
     func changeTab(to tab: TabType)
     func removeDefaultTabBar()
+    //
+    func updateCustomTabBarState(isHidden: Bool)
 }

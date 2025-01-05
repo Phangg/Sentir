@@ -6,8 +6,10 @@
 //  Copyright © 2024 Sentir. All rights reserved.
 //
 
-public enum ListViewType {
-    case all(sortBy: JournalFilterState)
+import Common
+
+public enum JournalListViewType: Equatable, Hashable {
+    case all
     case day(dateInfo: String)
-    case search(searchText: String)
+    case search(searchedJournals: [String: [Journal]])
 }

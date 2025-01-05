@@ -10,10 +10,12 @@ import SwiftUI
 
 import Common
 
-public class AppSchemeUseCaseImp: AppSchemeUseCase {
+public final class AppSchemeUseCaseImp: AppSchemeUseCase {
     private let appSchemeRepository: AppSchemeRepository
     
-    public init(appSchemeRepository: AppSchemeRepository) {
+    public init(
+        appSchemeRepository: AppSchemeRepository
+    ) {
         self.appSchemeRepository = appSchemeRepository
     }
     

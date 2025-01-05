@@ -12,6 +12,7 @@ import Common
 import Core
 import Data
 import Domain
+import SettingFeature
 
 extension AppDelegate {
     //
@@ -27,8 +28,12 @@ extension AppDelegate {
         }
         
         // TabBar State
-        container.register(type: TabBarStateManageable.self) { _ in
-            TabBarState()
+        let tabBarState = TabBarState.shared
+        container.register(type: TabBarStateManageable.self, tabBarState)
+        
+        // Journal Store
+        container.register(type: JournalUseCase.self) { _ in
+            JournalUseCaseImp(journalStore: JournalStoreImp())
         }
     }
 }

@@ -7,8 +7,9 @@
 //
 
 import SwiftUI
+
+import Common
 import DesignSystem
-import JournalHandlerFeature
 
 struct JournalDetailView: View {
     var type: JournalType

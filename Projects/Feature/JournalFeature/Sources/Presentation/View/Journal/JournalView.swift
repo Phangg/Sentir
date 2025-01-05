@@ -11,21 +11,17 @@ import SwiftUI
 import Common
 import Core
 import DesignSystem
+import JournalHandlerFeature
 
 public struct JournalView: View {
-    @StateObject var container: MVIContainer<JournalIntent, JouarnalModelState>
+    @StateObject var container: MVIContainer<JournalIntent, JournalModelState>
     private var intent: JournalIntent { container.intent }
-    private var state: JouarnalModelState { container.model }
+    private var state: JournalModelState { container.model }
     
     //
-    public init() {
-        let model = JouarnalModelImp()
-        let intent = JournalIntentImp(model: model)
-        let container = MVIContainer(
-            intent: intent as JournalIntent,
-            model: model as JouarnalModelState,
-            modelChangePublisher: model.objectWillChange
-        )
+    init(
+        container: MVIContainer<JournalIntent, JournalModelState>
+    ) {
         self._container = StateObject(wrappedValue: container)
     }
     
@@ -38,8 +34,9 @@ public struct JournalView: View {
                 case .list:
                     ZStack(alignment: .topTrailing) {
                         //
-                        JournalListView(listType: .all(sortBy: state.filterState))
+                        JournalListView()
                             .transition(.opacity)
+                            .environmentObject(container)
                         //
                         VStack {
                             JournalListFilterButton
@@ -49,41 +46,46 @@ public struct JournalView: View {
                     }
                 case .calendar:
                     //
-                    JournalCalendarView(
-                        selectedMonthAndDates: Binding(
-                            get: { state.selectedMonthAndDates },
-                            set: { intent.setValue($0) }
-                        )
-                    )
-                    .transition(.opacity)
-                    
+                    JournalCalendarView()
+                        .transition(.opacity)
+                        .environmentObject(container)
                     //
-                    JournalListView(
-                        listType: .day(
-                            dateInfo: DateFormat
-                                .dateToDateInfoString(state.selectedMonthAndDates)
-                        )
-                    )
+                    JournalListView()
+                        .environmentObject(container)
                 }
             }
             .animation(.easeInOut, value: state.currentJournalViewState)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden()
             .toolbar { journalViewToolbarContent() }
-            // TODO: - 수정 필요
+            // TODO: - Destination 수정 필요
             .navigationDestination(for: String.self) { value in
                 switch value {
                 case "SearchView":
-                    SearchView()
+                    SearchView(
+                        handleSearchCompletion: { [weak intent] result in
+                            intent?.updateListTypeToSearch(result: result)
+                        }, finalizeSearchFlow: { [weak intent] in
+                            intent?.finishedSearchView()
+                        }
+                    )
+                    .environmentObject(container)
                 default:
                     fatalError()
                 }
             }
         }
+        .onChange(of: state.listType) { old, new in
+            print("\(old) -> \(new)")
+        }
+        .onChange(of: state.currentJournalViewState) { _, newState in
+            intent.onChangedCurrentJournalView(state: newState,
+                                               date: state.selectedMonthAndDates)
+        }
         // 최신순 / 과거순
         .sheet(
             isPresented: Binding(get: { state.showFilterSheet },
-                                 set: { intent.setValue($0) }),
+                                 set: { intent.setValue(showFilterSheet: $0) }),
             onDismiss: {
                 intent.dismissFilterSheet()
             }, content: {
@@ -91,7 +93,7 @@ public struct JournalView: View {
                     filterState: Binding(get: { state.filterState },
                                          set: { intent.setValue($0) }),
                     showFilterSheet: Binding(get: { state.showFilterSheet },
-                                             set: { intent.setValue($0) })
+                                             set: { intent.setValue(showFilterSheet: $0) })
                 )
             }
         )

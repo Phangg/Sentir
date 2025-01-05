@@ -7,21 +7,32 @@
 //
 
 import SwiftUI
+import Combine
 
 // MARK: -
-public protocol TabBarStateManageable {
+@MainActor
+public protocol TabBarStateManageable: AnyObject {
     //
     var isHidden: Bool { get }
+    var isHiddenPublisher: Published<Bool>.Publisher { get }
     //
     func hide()
     func show()
 }
 
 // MARK: -
+@MainActor
 public final class TabBarState: ObservableObject, TabBarStateManageable {
+    //
+    public static let shared = TabBarState()
+    //
     @Published public private(set) var isHidden: Bool = false
     
-    public init() { }
+    public var isHiddenPublisher: Published<Bool>.Publisher {
+        $isHidden
+    }
+    
+    private init() { }
     
     public func hide() {
         isHidden = true

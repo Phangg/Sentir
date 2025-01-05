@@ -33,7 +33,7 @@ final class AppFlowIntentImp {
 
 // MARK: - Intent
 extension AppFlowIntentImp: AppFlowIntent {
-    //
+    //    
     var appScheme: AppScheme {
         appSchemeUseCase.currentScheme
     }

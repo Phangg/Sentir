@@ -1,8 +1,8 @@
 //
 //  JournalViewState.swift
-//  FeatureDependency
+//  Common
 //
-//  Created by phang on 11/7/24.
+//  Created by phang on 12/9/24.
 //  Copyright © 2024 Phang. All rights reserved.
 //
 

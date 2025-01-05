@@ -12,10 +12,13 @@ import Common
 protocol MainTabModelState: AnyObject {
     var currentTab: TabType { get }
     var isDefaultTabBarHidden: Bool { get }
+    var customTabBarState: Bool { get }
 }
 
 // MARK: - Action
 protocol MainTabModelAction: AnyObject {
     func removeDefaultTabBar()
     func updateTab(_ tab: TabType)
+    func hideCustomTabBar()
+    func showCustomTabBar()
 }

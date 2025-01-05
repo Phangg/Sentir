@@ -1,5 +1,5 @@
 //
-//  WriteJournalView.swift
+//  JournalEditorView.swift
 //  MainFeature
 //
 //  Created by phang on 10/15/24.
@@ -10,7 +10,7 @@ import SwiftUI
 import Common
 import DesignSystem
 
-public struct WriteJournalView: View {
+public struct JournalEditorView: View {
     @EnvironmentObject private var tabBarState: TabBarState
     @Environment(\.dismiss) private var dismiss
     @State private var isShowDeleteAlert: Bool = false

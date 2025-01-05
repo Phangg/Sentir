@@ -7,12 +7,33 @@
 //
 
 import SwiftUI
+
 import Common
+import Core
 import DesignSystem
 
 struct JournalFilterView: View {
-    @Binding var filterState: JournalFilterState
-    @Binding var showFilterSheet: Bool
+    @StateObject var container: MVIContainer<JournalFilterIntent, JournalFilterModelState>
+    private var intent: JournalFilterIntent { container.intent }
+    private var state: JournalFilterModelState { container.model }
+    
+    init(
+        filterState: Binding<JournalFilterState>,
+        showFilterSheet: Binding<Bool>
+    ) {
+        //
+        let model = JournalFilterModelImp(
+            filterState: filterState,
+            showFilterSheet: showFilterSheet
+        )
+        let intent = JournalFilterIntentImp(model: model)
+        let container = MVIContainer(
+            intent: intent as JournalFilterIntent,
+            model: model as JournalFilterModelState,
+            modelChangePublisher: model.objectWillChange
+        )
+        self._container = StateObject(wrappedValue: container)
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -25,21 +46,20 @@ struct JournalFilterView: View {
             VStack(alignment: .leading, spacing: 0) {
                 //
                 Button {
-                    filterState = .newest
-                    showFilterSheet.toggle()
+                    intent.tapFilterButton(.newest)
                 } label: {
                     HStack {
                         Text(JournalFilterState.newest.rawValue)
                             .textStyle(
                                 Paragraph(
-                                    weight: filterState == .newest ? .medium : .regular,
-                                    color: filterState == .newest ? DesignSystemAsset.black : DesignSystemAsset.lightGray
+                                    weight: state.filterState == .newest ? .medium : .regular,
+                                    color: state.filterState == .newest ? DesignSystemAsset.black : DesignSystemAsset.lightGray
                                 )
                             )
                         Spacer()
                         Image(systemName: "checkmark")
                             .font(.callout)
-                            .tint(filterState == .newest ? DesignSystemAsset.black : .clear)
+                            .tint(state.filterState == .newest ? DesignSystemAsset.black : .clear)
                     }
                     .background(Color.clear)
                 }
@@ -49,21 +69,20 @@ struct JournalFilterView: View {
                               type: .horizontal(height: 0.3))
                 //
                 Button {
-                    filterState = .oldest
-                    showFilterSheet.toggle()
+                    intent.tapFilterButton(.oldest)
                 } label: {
                     HStack {
                         Text(JournalFilterState.oldest.rawValue)
                             .textStyle(
                                 Paragraph(
-                                    weight: filterState == .oldest ? .medium : .regular,
-                                    color: filterState == .oldest ? DesignSystemAsset.black : DesignSystemAsset.lightGray
+                                    weight: state.filterState == .oldest ? .medium : .regular,
+                                    color: state.filterState == .oldest ? DesignSystemAsset.black : DesignSystemAsset.lightGray
                                 )
                             )
                         Spacer()
                         Image(systemName: "checkmark")
                             .font(.callout)
-                            .tint(filterState == .oldest ? DesignSystemAsset.black : .clear)
+                            .tint(state.filterState == .oldest ? DesignSystemAsset.black : .clear)
                     }
                 }
                 .padding(.vertical, ViewValues.defaultPadding)

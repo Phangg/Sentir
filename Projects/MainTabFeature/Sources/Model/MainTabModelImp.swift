@@ -14,14 +14,17 @@ public final class MainTabModelImp: ObservableObject, MainTabModelState {
     //
     @Published private(set) var currentTab: TabType
     @Published private(set) var isDefaultTabBarHidden: Bool
+    @Published private(set) var customTabBarState: Bool
     
     //
     init(
         currentTab: TabType = .main,
-        isDefaultTabBarHidden: Bool = false
+        isDefaultTabBarHidden: Bool = false,
+        customTabBarState: Bool = true
     ) {
         self.currentTab = currentTab
         self.isDefaultTabBarHidden = isDefaultTabBarHidden
+        self.customTabBarState = customTabBarState
     }
 }
 
@@ -32,5 +35,13 @@ extension MainTabModelImp: MainTabModelAction {
     
     func updateTab(_ tab: TabType) {
         currentTab = tab
+    }
+    
+    func hideCustomTabBar() {
+        customTabBarState = false
+    }
+    
+    func showCustomTabBar() {
+        customTabBarState = true
     }
 }

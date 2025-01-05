@@ -7,116 +7,33 @@
 //
 
 import SwiftUI
+
 import Common
+import Core
 import DesignSystem
 
 struct JournalCalendarView: View {
-    @State private var month: Date = Date()
-    @State private var refreshId = UUID()
-    @Binding var selectedMonthAndDates: Date
-    
-    init(
-        selectedMonthAndDates: Binding<Date>
-    ) {
-        self._selectedMonthAndDates = selectedMonthAndDates
-    }
+    @EnvironmentObject var container: MVIContainer<JournalIntent, JournalModelState>
+    private var intent: JournalCalenderIntent { container.intent }
+    private var state: JournalCalenderModelState { container.model }
     
     var body: some View {
         VStack(alignment: .leading) {
             //
             CalendarHeaderView
+                .onChange(of: state.currentMonth) { _, _ in
+                    intent.onChangeMonth()
+                }
             //
             CalendarGridView
-                .id(refreshId)
+                .id(state.refreshID)
         }
         .padding([.horizontal, .bottom], ViewValues.defaultPadding)
         .padding(.top, ViewValues.halfPadding)
     }
-    
-    // 특정 해당 날짜
-    func getDate(for index: Int) -> Date {
-        let calendar = Calendar.current
-        guard let firstDayOfMonth = calendar.date(
-            from: DateComponents(
-                year: calendar.component(.year, from: month),
-                month: calendar.component(.month, from: month),
-                day: 1
-            )
-        ) else {
-            return Date()
-        }
-        
-        var dateComponents = DateComponents()
-        dateComponents.day = index
-        
-        let timeZone = TimeZone.current
-        let offset = Double(timeZone.secondsFromGMT(for: firstDayOfMonth))
-        dateComponents.second = Int(offset)
-        
-        let date = calendar.date(byAdding: dateComponents, to: firstDayOfMonth) ?? Date()
-        return date
-    }
-    
-    // 해당 월에 존재하는 일자 수
-    func numberOfDays(in date: Date) -> Int {
-        return Calendar.current.range(of: .day, in: .month, for: date)?.count ?? 0
-    }
-    
-    // 해당 월의 첫 날짜가 갖는 해당 주의 몇번째 요일
-    func firstWeekdayOfMonth(in date: Date) -> Int {
-        let components = Calendar.current.dateComponents([.year, .month], from: date)
-        let firstDayOfMonth = Calendar.current.date(from: components)!
-        
-        return Calendar.current.component(.weekday, from: firstDayOfMonth)
-    }
-    
-    // 이전 월 마지막 일자
-    func previousMonth() -> Date {
-        let components = Calendar.current.dateComponents([.year, .month], from: month)
-        let firstDayOfMonth = Calendar.current.date(from: components)!
-        let previousMonth = Calendar.current.date(byAdding: .month, value: -1, to: firstDayOfMonth)!
-        
-        return previousMonth
-    }
-    
-    // 월 변경
-    func changeMonth(by value: Int) {
-        self.month = adjustedMonth(by: value)
-        self.refreshId = UUID()
-    }
-    
-    // 이전 월로 이동 가능한지 확인
-    func canMoveToPreviousMonth() -> Bool {
-        let currentDate = Date()
-        let calendar = Calendar.current
-        let targetDate = calendar.date(byAdding: .month, value: -60, to: currentDate) ?? currentDate
-        
-        if adjustedMonth(by: -1) < targetDate {
-            return false
-        }
-        return true
-    }
-    
-    // 다음 월로 이동 가능한지 확인
-    func canMoveToNextMonth() -> Bool {
-        let currentDate = Date()
-        let calendar = Calendar.current
-        let targetDate = calendar.date(byAdding: .month, value: 60, to: currentDate) ?? currentDate
-        
-        if adjustedMonth(by: 1) > targetDate {
-            return false
-        }
-        return true
-    }
-    
-    // 변경하려는 월 반환
-    func adjustedMonth(by value: Int) -> Date {
-        if let newMonth = Calendar.current.date(byAdding: .month, value: value, to: month) {
-            return newMonth
-        }
-        return month
-    }
-    
+}
+
+extension JournalCalendarView {
     //
     @ViewBuilder
     fileprivate var CalendarHeaderView: some View {
@@ -124,31 +41,30 @@ struct JournalCalendarView: View {
         HStack(alignment: .center, spacing: 20) {
             //
             Button {
-                changeMonth(by: -1)
+                intent.changeMonth(by: .previous)
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.title3)
             }
-            .disabled(!canMoveToPreviousMonth())
+            .disabled(!state.canMoveToPreviousMonth)
             //
-            Text(month, formatter: DateFormat.calendarHeaderDateFormatter)
+            Text(state.currentMonth, formatter: DateFormat.calendarHeaderDateFormatter)
                 .textStyle(MediumTitle(weight: .semibold))
                 .frame(width: 100)
             //
             Button {
-                changeMonth(by: 1)
+                intent.changeMonth(by: .next)
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.title3)
             }
-            .disabled(!canMoveToNextMonth())
+            .disabled(!state.canMoveToNextMonth)
         }
         .padding(.bottom, ViewValues.halfPadding)
         //
         HStack(alignment: .center, spacing: 10) {
-            let week = ["일", "월", "화", "수", "목", "금", "토"]
-            ForEach(week.indices, id: \.self) { idx in
-                Text(week[idx])
+            ForEach(state.weekDays.indices, id: \.self) { idx in
+                Text(state.weekDays[idx])
                     .textStyle(
                         SmallTitle(
                             weight: .medium,
@@ -163,9 +79,9 @@ struct JournalCalendarView: View {
     //
     @ViewBuilder
     fileprivate var CalendarGridView: some View {
-        let daysInMonth: Int = numberOfDays(in: month)
-        let firstWeekday: Int = firstWeekdayOfMonth(in: month) - 1
-        let lastDayOfMonthBefore: Int = numberOfDays(in: previousMonth())
+        let daysInMonth: Int = state.numberOfDays(in: state.currentMonth)
+        let firstWeekday: Int = state.firstWeekdayOfMonth(in: state.currentMonth) - 1
+        let lastDayOfMonthBefore: Int = state.numberOfDays(in: state.previousMonth())
         let numberOfRows: Int = Int(ceil(Double(daysInMonth + firstWeekday) / 7.0))
         let visibleDaysOfNextMonth: Int = numberOfRows * 7 - (daysInMonth + firstWeekday)
         
@@ -174,11 +90,11 @@ struct JournalCalendarView: View {
                 Group {
                     if idx > -1, idx < daysInMonth {
                         //
-                        let date = getDate(for: idx)
+                        let date = state.getDate(for: idx)
                         let day = Calendar.current.component(.day, from: date)
-                        let isSelected = DateFormat.calendarDayString(selectedMonthAndDates) == DateFormat.calendarDayString(date)
+                        let isSelected = DateFormat.calendarDayString(state.selectedMonthAndDates) == DateFormat.calendarDayString(date)
                         let isToday = DateFormat.calendarDayString(date) == DateFormat.calendarDayString(Date())
-                        let hasJournalFlag = getJournalFlag(for: date)
+                        let hasJournalFlag = state.getJournalFlag(for: date)
                         
                         CalendarCellView(
                             day: day,
@@ -186,10 +102,14 @@ struct JournalCalendarView: View {
                             isToday: isToday,
                             hasJournalFlag: hasJournalFlag
                         )
-                    } else if let prevMonthDate = Calendar.current.date(byAdding: .day, value: idx + lastDayOfMonthBefore, to: previousMonth()) {
+                    } else if let prevMonthDate = Calendar.current.date(
+                        byAdding: .day,
+                        value: idx + lastDayOfMonthBefore,
+                        to: state.previousMonth()
+                    ) {
                         //
                         let day = Calendar.current.component(.day, from: prevMonthDate)
-                    
+                        //
                         CalendarCellView(
                             day: day,
                             isCurrentMonthDay: false,
@@ -198,29 +118,9 @@ struct JournalCalendarView: View {
                     }
                 }
                 .onTapGesture {
-                    if 0 <= idx, idx < daysInMonth {
-                        let date = getDate(for: idx)
-                        selectedMonthAndDates = date
-                    }
+                    intent.tapCalenderCell(idx, daysInMonth: daysInMonth)
                 }
             }
-        }
-    }
-    
-    func getJournalFlag(for date: Date) -> JournalFlag {
-        let dateString = DateFormat.dateToDateInfoString(date)
-        
-        // TODO: - 현재 샘플 데이터 사용 중
-        guard let journals = JournalData.sample[dateString] else {
-            return .nothing
-        }
-        
-        if journals.count == JournalFlag.low.rawValue {
-            return .low
-        } else if journals.count <= JournalFlag.medium.rawValue {
-            return .medium
-        } else {
-            return .high
         }
     }
 }

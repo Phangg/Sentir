@@ -7,55 +7,46 @@
 //
 
 import SwiftUI
+
 import Common
+import Core
 import DesignSystem
-import JournalHandlerFeature
 
 public struct JournalListView: View {
-    @State private var journalData = JournalData.sample
-    private let listType: ListViewType
-    
-    public init(
-        listType: ListViewType
-    ) {
-        self.listType = listType
-    }
+    @EnvironmentObject var container: MVIContainer<JournalIntent, JournalModelState>
+    private var intent: JournalListIntent { container.intent }
+    private var state: JournalListModelState { container.model }
         
     public var body: some View {
         VStack {
             //
             List {
+                switch state.listType {
                 //
-                switch listType {
-                //
-                case .all(sortBy: let filterState):
-                    DisplayAllJournals(filterState)
+                case .all:
+                    DisplayAllJournals()
                 //
                 case .day(dateInfo: let dateInfo):
-                    DisplayJournals(dateInfo)
+                    DisplayJournals(forDate: dateInfo, inData: state.journals)
                 //
-                case .search(searchText: let searchText):
-                    DisplaySearchJournals(searchText)
+                case .search(searchedJournals: let searchedJournals):
+                    DisplaySearchJournals(searchedJournals)
                 }
             }
             .listStyle(.plain)
         }
         .safeAreaPadding(.bottom, ViewValues.bottomTabArea + ViewValues.largePadding)
-        .navigationDestination(for: Journal.self) { journal in
-            WriteJournalView(viewState: .detail,
-                             journalType: journal.type,
-                             journalText: journal.content,
-                             dateInfo: journal.dateInfo)
-        }
     }
 
     @ViewBuilder
-    private func DisplayAllJournals(_ filterState: JournalFilterState) -> some View {
-        let journalData = filterState == .newest ? journalData.keys.sorted(by: >) : journalData.keys.sorted(by: <)
+    fileprivate func DisplayAllJournals() -> some View {
+        let journals = state.filterState == .newest
+        ? state.journals.keys.sorted(by: >)
+        : state.journals.keys.sorted(by: <)
         //
-        ForEach(journalData, id: \.self) { dateInfo in
+        ForEach(journals, id: \.self) { dateInfo in
             Section {
-                DisplayJournals(dateInfo)
+                DisplayJournals(forDate: dateInfo, inData: state.journals)
             } header: {
                 Text(dateInfo)
                     .textStyle(SmallTitle(weight: .medium,
@@ -65,12 +56,11 @@ public struct JournalListView: View {
     }
     
     @ViewBuilder
-    private func DisplaySearchJournals(_ searchText: String) -> some View {
-        let searchData = searchJournals(for: searchText)
+    fileprivate func DisplaySearchJournals(_ searchedJournals: [String: [Journal]]) -> some View {
         //
-        ForEach(searchData.keys.sorted(by: >), id: \.self) { dateInfo in
+        ForEach(searchedJournals.keys.sorted(by: >), id: \.self) { dateInfo in
             Section {
-                DisplayJournals(dateInfo)
+                DisplayJournals(forDate: dateInfo, inData: searchedJournals)
             } header: {
                 Text(dateInfo)
                     .textStyle(SmallTitle(weight: .medium,
@@ -80,8 +70,11 @@ public struct JournalListView: View {
     }
 
     @ViewBuilder
-    private func DisplayJournals(_ dateInfo: String) -> some View {
-        ForEach(journalData[dateInfo] ?? [], id: \.id) { journal in
+    fileprivate func DisplayJournals(
+        forDate dateInfo: String,
+        inData journals: [String: [Journal]]
+    ) -> some View {
+        ForEach(journals[dateInfo] ?? [], id: \.id) { journal in
             //
             NavigationLink(value: journal) {
                 VStack(alignment: .leading, spacing: 4) {
@@ -96,36 +89,28 @@ public struct JournalListView: View {
                 }
                 .padding(.vertical, ViewValues.tinyPadding)
             }
+            .simultaneousGesture(TapGesture().onEnded {
+                print("NavigationLink tapped:", journal)
+            })
         }
         .onDelete { indexSet in
-            deleteItem(at: indexSet, for: dateInfo)
+            intent.deleteJournalItem(at: indexSet, for: dateInfo)
+//            deleteItem(at: indexSet, for: dateInfo)
         }
     }
 
-    private func deleteItem(
-        at indexSet: IndexSet,
-        for dateInfo: String
-    ) {
-        if var journals = journalData[dateInfo] {
-            journals.remove(atOffsets: indexSet)
-            //
-            if journals.isEmpty {
-                journalData.removeValue(forKey: dateInfo)
-            } else {
-                journalData[dateInfo] = journals
-            }
-        }
-    }
-    
-    private func searchJournals(for text: String) -> [String: [Journal]] {
-        journalData.reduce(into: [String: [Journal]]()) { result, value in
-            let (dateInfo, journals) = value
-            let filteredJournals = journals.filter { journal in
-                journal.content.localizedCaseInsensitiveContains(text)
-            }
-            if !filteredJournals.isEmpty {
-                result[dateInfo] = filteredJournals
-            }
-        }
-    }
+//    private func deleteItem(
+//        at indexSet: IndexSet,
+//        for dateInfo: String
+//    ) {
+//        if var journals = state.journals[dateInfo] {
+//            journals.remove(atOffsets: indexSet)
+//            //
+//            if journals.isEmpty {
+////                state.journals.removeValue(forKey: dateInfo)
+//            } else {
+////                state.journals[dateInfo] = journals
+//            }
+//        }
+//    }
 }

@@ -18,7 +18,6 @@ struct CalendarCellView: View {
     var isToday: Bool = false
     var isCurrentMonthDay: Bool = true
     var hasJournalFlag: JournalFlag
-    
     var textColor: Color {
         if isSelected {
             return DesignSystemAsset.white
@@ -28,7 +27,6 @@ struct CalendarCellView: View {
             return DesignSystemAsset.lightGray
         }
     }
-    
     var backgroundColor: Color {
         if isSelected {
             return DesignSystemAsset.black

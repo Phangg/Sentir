@@ -1,13 +1,13 @@
 //
-//  Untitled.swift
-//  FeatureDependency
+//  JournalType.swift
+//  Common
 //
-//  Created by phang on 11/7/24.
+//  Created by phang on 12/9/24.
 //  Copyright © 2024 Phang. All rights reserved.
 //
 
 // MARK: -
-public enum JournalType: Hashable {
+public enum JournalType: Hashable, Codable {
     case withinThreeMinutes
     case voiceRecording
     case resolution

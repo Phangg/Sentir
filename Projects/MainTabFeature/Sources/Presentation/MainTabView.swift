@@ -16,12 +16,11 @@ import MainFeature
 import SettingFeature
 
 public struct MainTabView: View {
-    //
     @StateObject var container: MVIContainer<MainTabIntent, MainTabModelState>
     private var intent: MainTabIntent { container.intent }
     private var state: MainTabModelState { container.model }
     
-    public init( ) {
+    public init() {
         let model = MainTabModelImp()
         let intent = MainTabIntentImp(
             model: model
@@ -43,7 +42,7 @@ public struct MainTabView: View {
                     set: { intent.changeTab(to: $0) })
                 ) {
                     //
-                    SentirMainView()
+                    SentirMainView.build()
                         .tabItem {
                             Image(systemName: TabType.main.image)
                         }
@@ -54,13 +53,13 @@ public struct MainTabView: View {
                         }
                         .tag(TabType.main)
                     //
-                    JournalView()
+                    JournalView.build()
                         .tabItem {
                             Image(systemName: TabType.journal.image)
                         }
                         .tag(TabType.journal)
                     //
-                    SettingView()
+                    SettingView.build()
                         .tabItem {
                             Image(systemName: TabType.setting.image)
                         }
@@ -68,12 +67,15 @@ public struct MainTabView: View {
                 }
             }
             // 실제로 사용되는 TabBar
-            if !intent.tabBarState.isHidden {
+            if state.customTabBarState {
                 FloatingTabBar(
                     adapter: FloatingTabBarAdapter(intent: intent, state: state)
                 )
                 .padding(.horizontal, ViewValues.largePadding)
             }
+        }
+        .onReceive(intent.tabBarState.isHiddenPublisher) { isHidden in
+            intent.updateCustomTabBarState(isHidden: isHidden)
         }
         .ignoresSafeArea(.keyboard)
     }

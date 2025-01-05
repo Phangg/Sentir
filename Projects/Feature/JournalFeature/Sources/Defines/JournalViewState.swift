@@ -6,7 +6,7 @@
 //  Copyright © 2024 Sentir. All rights reserved.
 //
 
-public enum JournalViewState {
+enum JournalViewState {
     case list
     case calendar
 }

@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-import Common
 import Core
 import MainTabFeature
 import OnboardingFeature
@@ -18,10 +17,12 @@ public struct AppFlowView: View {
     @StateObject var container: MVIContainer<AppFlowIntent, AppFlowModelState>
     private var intent: AppFlowIntent { container.intent }
     private var state: AppFlowModelState { container.model }
-    
+
     public init() {
         let model = AppFlowModelImp()
-        let intent = AppFlowIntentImp(model: model)
+        let intent = AppFlowIntentImp(
+            model: model
+        )
         let container = MVIContainer(
             intent: intent as AppFlowIntent,
             model: model as AppFlowModelState,
